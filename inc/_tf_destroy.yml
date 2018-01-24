@@ -1,0 +1,25 @@
+---
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
+- pause:
+    prompt: "Type 'destroy' if you want this to be done."
+  register: prompted
+  when:
+    - not (auto_apply|default(false))
+
+- meta: end_play
+  when:
+    - not (auto_apply|default(false))
+    - prompted is defined and prompted.user_input != 'destroy'
+
+- name: "{{ tflayer }} - destroy"
+  shell: >-
+    terraform destroy -force
+    {{ var_files_options|join(' ') }}
+    -var deploy_env={{ deploy_env }}
+    -var deploy_region={{ deploy_region }}
+    -var terrabot_all_layers_dir={{ target_all_layers_dir }}
+    -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate
+    2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
+  args:
+    chdir: "{{ src_layer_dir }}"

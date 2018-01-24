@@ -1,0 +1,12 @@
+---
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ teardown_tasks }}"
+      skip: true
+
+- name: TerraBot has finished.
+  debug:
+    msg:
+      - "SRC_LAYER={{ src_layer_dir }}"
+      - "TARGET_LAYER={{ target_layer_dir }}"

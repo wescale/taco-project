@@ -1,0 +1,71 @@
+---
+- name: check that mandatory vars are supplied
+  assert:
+    that:
+      - vars[item] is defined
+      - vars[item] != ''
+    msg: "Mandatory variable '{{ item }}' missing"
+  with_items:
+    - tflayer
+    - deploy_env
+    - deploy_region
+    - tfaction
+
+- name: variable cooking
+  set_fact:
+    src_layer_dir: "{{ layers_dir }}/{{ tflayer }}"
+    target_all_layers_dir: "{{ target_dir }}/terrabot"
+    target_layer_dir: "{{ target_dir }}/terrabot/{{ tflayer }}"
+
+- name: check that target terraform layer is found
+  stat:
+    path: "{{ src_layer_dir }}"
+  register: src_layer_dir_scan
+
+- name: check that target terraform layer is found
+  assert:
+    that:
+      - src_layer_dir_scan.stat.exists
+      - src_layer_dir_scan.stat.isdir
+    msg: "Source layer could not be found: {{ src_layer_dir }}"
+
+- name: create work dir
+  file:
+    path: "{{ target_layer_dir }}"
+    state: directory
+
+- name: check for terrabot var files
+  stat:
+    path: "{{ item }}"
+  register: terrabot_vars_scan
+  with_items:
+    - "{{ playbook_dir }}/all.terrabot.yml"
+    - "{{ layers_dir }}/all.terrabot.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/all.{{ deploy_region }}.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.all.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/all.yml"
+
+- name: cooking variables
+  set_fact:
+    tfvars_addons: >-
+      {{
+        terrabot_vars_scan.results
+        |selectattr('stat.exists')
+        |map(attribute='stat.path')
+        |list
+      }}
+
+- name: generate a json tfvar file for
+  include_tasks: "{{ playbook_dir }}/inc/_tfvars_addon.yml"
+  with_items: "{{ tfvars_addons }}"
+  loop_control:
+    loop_var: "terrabot_var_file"
+
+- set_fact:
+    var_files_options: >-
+      {{
+        generated_tfvars|default([])
+        |map('regex_replace', '(.*)', '-var-file=\1')
+        |list
+      }}

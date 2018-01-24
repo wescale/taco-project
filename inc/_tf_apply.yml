@@ -1,0 +1,32 @@
+---
+- include_tasks: "{{ playbook_dir }}/inc/_tf_plan.yml"
+
+- pause:
+    prompt: "Type 'apply' if you want this to be done."
+  register: prompted
+  when:
+    - not (auto_apply|default(false))
+    - not dry_run
+
+- meta: end_play
+  when:
+    - dry_run
+
+- meta: end_play
+  when:
+    - not (auto_apply|default(false))
+    - prompted is defined and prompted.user_input != 'apply'
+
+- name: "{{ tflayer }} - apply"
+  shell: >-
+    terraform apply
+    {{ var_files_options|join(' ') }}
+    -auto-approve
+    -var deploy_env={{ deploy_env }}
+    -var deploy_region={{ deploy_region }}
+    -var terrabot_all_layers_dir={{ target_all_layers_dir }}
+    -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate
+    2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
+  args:
+    chdir: "{{ src_layer_dir }}"
+  when: not dry_run

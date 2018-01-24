@@ -1,0 +1,31 @@
+---
+- include_vars: "{{ terrabot_var_file }}"
+
+- set_fact:
+    target_terrabot_var_file: >-
+      {{
+        terrabot_var_file.split('/')[-1]
+        |regex_replace('\.yml$','.tfvars.json')
+      }}
+
+- name: blending vars into the great library
+  include_vars:
+    file: "{{ terrabot_var_file }}"
+
+- name: including only the var file
+  include_vars:
+    file: "{{ terrabot_var_file }}"
+    name: self_vars_raw
+
+- name: generate terraform variables file
+  copy:
+    dest: "{{ target_layer_dir }}/{{ target_terrabot_var_file }}"
+    content: |-
+      {{ self_vars_raw|to_nice_json }}
+
+- set_fact:
+    generated_tfvars: >-
+      {{
+        generated_tfvars|default([])
+        + [target_layer_dir + '/' + target_terrabot_var_file]
+      }}

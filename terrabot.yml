@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+
+  vars:
+    pwd: "{{ lookup('env', 'PWD') }}"
+    target_dir: "{{ pwd }}/target"
+    layers_dir: "{{ pwd }}/terraform"
+    terrabot_vars: "{{ {} }}"
+    deploy_region: "{{ lookup('env', 'AWS_DEFAULT_REGION') }}"
+    tf_upgrade: true
+    dry_run: false
+    backend_reconfigure: true
+
+  pre_tasks:
+    - import_tasks: "{{ playbook_dir }}/inc/_setup.yml"
+
+  tasks:
+    - include_tasks: "{{ playbook_dir }}/inc/_tf_{{ tfaction }}.yml"
+
+  post_tasks:
+    - include_tasks: "{{ post_tasks_file }}"
+      when: post_tasks_file is defined
+
+    - import_tasks: "{{ playbook_dir }}/inc/_teardown.yml"

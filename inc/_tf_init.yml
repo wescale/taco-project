@@ -1,0 +1,23 @@
+---
+- set_fact:
+    init_command_line: >-
+      terraform init -get=true
+      -upgrade={{ tf_upgrade|default(false)|lower }}
+      {% for backend_conf in tflayer_backend_config.items() %}
+      -backend-config="{{ backend_conf[0] }}={{ backend_conf[1] }}"
+      {% endfor %}
+      -reconfigure={{ backend_reconfigure|default(true)|lower }}
+
+- debug:
+    msg: >-
+      cd {{ src_layer_dir }} &&
+      {{ init_command_line }}
+    verbosity: 1
+
+- name: "{{ tflayer }} - init"
+  shell: >-
+    {{ init_command_line }}
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_init
+#  when: not dry_run

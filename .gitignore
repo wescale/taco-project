@@ -1,0 +1,16 @@
+secrets/*
+*_creds.sh
+.idea
+*.iml
+*.ipr
+*.iws
+target/*
+.terraform
+*.retry
+become_root_role.sh
+become_sec_role.sh
+.vscode
+*.log
+*.osgi.yml
+terraform/temp/
+ssh.cfg

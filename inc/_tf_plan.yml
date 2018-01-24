@@ -1,0 +1,35 @@
+---
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
+- set_fact:
+    plan_command_line: >-
+      terraform plan
+      {{ var_files_options|join(' ') }}
+      -var deploy_env={{ deploy_env }}
+      -var deploy_region={{ deploy_region }}
+      -var terrabot_all_layers_dir={{ target_all_layers_dir }}
+      -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate
+- debug:
+    var: plan_command_line
+    verbosity: 1
+
+- name: "{{ tflayer }} - plan"
+  shell: >-
+    {{ plan_command_line }}
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_plan
+  when: not dry_run
+
+- pause:
+    prompt: |-
+      {{ tf_plan.stdout }}
+      #
+      ##
+      ###
+      #### READ CAREFULLY !!!
+      Press 'ENTER' to continue
+    register: tf_plan_prompt
+  when:
+    - not (auto_apply|default(false))
+    - not dry_run
