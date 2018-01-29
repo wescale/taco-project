@@ -32,6 +32,7 @@
     AWS_SECRET_ACCESS_KEY: "{{ aws_credentials.secret_key }}"
     AWS_SESSION_TOKEN: "{{ aws_credentials.session_token }}"
     AWS_SECURITY_TOKEN: "{{ aws_credentials.session_token }}"
+    AWS_DEFAULT_REGION: "{{ deploy_region }}"
 
   vars:
     pwd: "{{ lookup('env', 'PWD') }}"
