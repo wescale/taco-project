@@ -42,10 +42,10 @@
     - "{{ playbook_dir }}/all.terrabot.yml"
     - "{{ layers_dir }}/all.terrabot.yml"
     - "{{ layers_dir }}/common.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/all.yml"
     - "{{ layers_dir }}/{{ tflayer }}/all.{{ deploy_region }}.yml"
     - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.all.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/all.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.yml"
 
 - name: cooking variables
   set_fact:

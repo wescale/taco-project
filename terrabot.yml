@@ -19,7 +19,7 @@
         role_session_name: "{{ initial_role.split('/')[-1] }}"
         region: "{{ deploy_region }}"
       register: initial_role_credentials
-      when: assume_initial_role|default(false)
+      when: initial_role|default(false)
 
     - include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
       when:
