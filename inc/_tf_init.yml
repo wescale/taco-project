@@ -22,6 +22,10 @@
   register: tf_init
   when: initial_role is not defined
 
+- name: credentials assumed
+  debug:
+    var: initial_role_credentials
+
 - name: "{{ tflayer }} - init (with initial role assumed)"
   shell: >-
     {{ init_command_line }}

@@ -18,7 +18,7 @@
     {{ plan_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
-  register: tf_plan
+  register: tf_plan_light
   when: initial_role is not defined
 
 
@@ -27,12 +27,21 @@
     {{ plan_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
-  register: tf_plan
+  register: tf_plan_assumed
   environment:
     AWS_ACCESS_KEY_ID: "{{ initial_role_credentials.sts_creds.access_key }}"
     AWS_SECRET_ACCESS_KEY: "{{ initial_role_credentials.sts_creds.secret_key }}"
     AWS_SECURITY_TOKEN: "{{ initial_role_credentials.sts_creds.session_token }}"
   when: initial_role is defined
+
+- set_fact:
+    tf_plan: "{{ tf_plan_assumed }}"
+  when: initial_role is defined
+
+- set_fact:
+    tf_plan: "{{ tf_plan_light }}"
+  when: initial_role is not defined
+
 
 - pause:
     prompt: |-
