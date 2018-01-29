@@ -1,5 +1,5 @@
 ---
-- name: Clone
+- name: Clone target repository
   git:
     repo: "{{ remote_stack_url }}"
     dest: "{{ playbook_dir }}/stack"
