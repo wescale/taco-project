@@ -31,6 +31,7 @@
     echo $AWS_ACCESS_KEY_ID &&
     echo $AWS_SECRET_ACCESS_KEY &&
     echo $AWS_SECURITY_TOKEN &&
+    python --version &&
     python -c "import sys; print('\n'.join(sys.path))" &&
     {{ init_command_line }}
   args:
