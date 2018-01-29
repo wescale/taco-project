@@ -28,6 +28,8 @@
 
 - name: "{{ tflayer }} - init (with initial role assumed)"
   shell: >-
+    echo $AWS_ACCESS_KEY_ID &&
+    echo $AWS_SECRET_ACCESS_KEY &&
     {{ init_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
