@@ -1,0 +1,99 @@
+---
+all_users:
+  - haricot_t
+  - maury_a
+  - schwartzmann_a
+  - tournay_s
+  - chan_d
+  - bourbia_m
+  - gea_a
+  - diez_n
+  - royere_j
+  - sellam_r
+
+tfstates_bucket_name: "bfb-tfstates"
+data_bucket_name: "bfb-data"
+
+# CentOS Linux 7 x86_64 HVM EBS 1704_01
+centos7_ami_id: "ami-eca3ac8a"
+
+# RHEL-7.4_HVM_GA-20170808-x86_64-2-Hourly2-GP2
+rhel7_ami_id: "ami-bb9a6bc2"
+
+sec_vpc_cidr: "10.99.0.0/16"
+dev_vpc_cidr: "10.44.0.0/16"
+uat_vpc_cidr: "10.33.0.0/16"
+qua_vpc_cidr: "10.34.0.0/16"
+pre_vpc_cidr: "10.22.0.0/16"
+prod_vpc_cidr: "10.1.0.0/16"
+
+root_account_id: "612042024637"
+sec_account_id: "146214576240"
+dev_account_id: "681172620387"
+uat_account_id: "901512579433"
+qua_account_id: "901512579433"
+int_account_id: "901512579433"
+rec_account_id: "901512579433"
+pre_account_id: "569586930285"
+prod_account_id: "900446980796"
+deploy_account_id: "{{ hostvars[inventory_hostname][deploy_env + '_account_id'] }}"
+
+private_key_path: "{{ lookup('env', 'PWD') }}/secrets/ma_cle"
+public_key_path: "{{ private_key_path }}.pub"
+
+memberlist_all: "{{ all_users }}"
+
+memberlist_watchers_base: "{{ all_users }}"
+
+memberlist_watchers_billing: 
+  - royere_j
+  - tournay_s
+
+memberlist_code_reviewers:
+  - schwartzmann_a
+
+memberlist_code_contributors:
+  - schwartzmann_a
+  - maury_a
+  - diez_n
+
+memberlist_builders_base:
+  - schwartzmann_a
+  - maury_a
+  - diez_n
+
+memberlist_weavers_base:
+  - maury_a
+  - diez_n
+  - chan_d
+
+memberlist_keepers_base:
+  - haricot_t
+  - maury_a
+  - diez_n
+  - chan_d
+
+memberlist_settlers_base:
+  - maury_a
+  - diez_n
+  - sellam_r
+  - royere_j
+  - chan_d
+
+allowed_ingress_cidr_blocks:
+  - "192.44.63.160/28"
+  - "92.154.60.129/32"
+# ipsec bastion for squid rebounce
+  - "34.253.86.237/32"
+
+cloudtrail_bucket_name: "bfb-cloudtrail-logs"
+awsconfig_bucket_name: "bfb-config"
+
+tflayer_backend_config:
+  bucket: "bfb-tfstates"
+  key: "tflayers/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
+  region: "{{ deploy_region }}"
+#  dynamo_table: "bfb-terraform-lock"
+
+ec2_init_version: "1.1.0"
+ec2_init_url: "https://readerbot:readerbot@code.priv.sec.cloud.bforbank.com/scm/an/ec2-init.git"
