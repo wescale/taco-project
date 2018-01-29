@@ -13,3 +13,4 @@
 
 - set_fact:
     layers_dir: "{{ terrabot_remote_stack_clone_dir.path }}/terraform"
+    target_dir: "{{ terrabot_remote_stack_clone_dir.path }}/target"
