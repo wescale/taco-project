@@ -17,6 +17,7 @@
     - sts_assume_role:
         role_arn: "{{ initial_role }}"
         role_session_name: "{{ initial_role.split('/')[-1] }}"
+        region: "{{ deploy_region }}"
       register: initial_role_credentials
       when: assume_initial_role|default(false)
 
