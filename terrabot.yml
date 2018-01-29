@@ -44,6 +44,9 @@
     backend_reconfigure: true
 
   pre_tasks:
+    - shell: >-
+        echo $AWS_SESSION_TOKEN && echo {{ aws_credentials.session_token }}
+
     - include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
       when:
         - remote_stack_url is defined
