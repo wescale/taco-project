@@ -13,9 +13,9 @@
 
         - set_fact:
             aws_credentials:
-              access_key: "{{ aws_credentials.access_key }}"
-              secret_key: "{{ aws_credentials.secret_key }}"
-              session_token: "{{ aws_credentials.session_token }}"
+              access_key: "{{ initial_role_credentials.sts_creds.access_key }}"
+              secret_key: "{{ initial_role_credentials.sts_creds.secret_key }}"
+              session_token: "{{ initial_role_credentials.sts_creds.session_token }}"
       when: initial_role|default(false)
       rescue:
         - set_fact:
