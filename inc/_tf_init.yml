@@ -36,6 +36,5 @@
     AWS_ACCESS_KEY_ID: "{{ initial_role_credentials.sts_creds.access_key }}"
     AWS_SECRET_ACCESS_KEY: "{{ initial_role_credentials.sts_creds.secret_key }}"
     AWS_SESSION_TOKEN: "{{ initial_role_credentials.sts_creds.session_token }}"
-    AWS_DEFAULT_REGION: "{{ deploy_region }}"
   when: initial_role is defined
 

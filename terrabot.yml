@@ -3,6 +3,38 @@
   become: no
   gather_facts: no
 
+  tasks:
+    - sts_assume_role:
+        role_arn: "{{ initial_role }}"
+        role_session_name: "{{ initial_role.split('/')[-1] }}"
+        region: "{{ deploy_region }}"
+      register: initial_role_credentials
+      when: initial_role|default(false)
+
+    - set_fact:
+        aws_credentials:
+          access_key: "{{ aws_credentials.access_key }}"
+          secret_key: "{{ aws_credentials.secret_key }}"
+          session_token: "{{ aws_credentials.session_token }}"
+      when: initial_role|default(false)
+
+    - set_fact:
+        aws_credentials:
+          access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+          secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+          session_token: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
+      when: not (initial_role|default(false))
+
+- hosts: localhost
+  become: no
+  gather_facts: no
+
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws_credentials.access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_credentials.secret_key }}"
+    AWS_SESSION_TOKEN: "{{ aws_credentials.session_token }}"
+    AWS_SECURITY_TOKEN: "{{ aws_credentials.session_token }}"
+
   vars:
     pwd: "{{ lookup('env', 'PWD') }}"
     target_dir: "{{ pwd }}/target"
@@ -14,13 +46,6 @@
     backend_reconfigure: true
 
   pre_tasks:
-    - sts_assume_role:
-        role_arn: "{{ initial_role }}"
-        role_session_name: "{{ initial_role.split('/')[-1] }}"
-        region: "{{ deploy_region }}"
-      register: initial_role_credentials
-      when: initial_role|default(false)
-
     - include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
       when:
         - remote_stack_url is defined
