@@ -18,7 +18,7 @@
         role_arn: "{{ initial_role }}"
         role_session_name: "{{ initial_role.split('/')[-1] }}"
       register: initial_role_credentials
-      when: initial_role is defined
+      when: assume_initial_role|default(false)
 
     - include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
       when:
