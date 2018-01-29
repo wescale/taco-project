@@ -6,4 +6,4 @@
     version: "{{ remote_stack_version }}"
 
 - set_fact:
-    layers_dir: "{{ pwd }}/stack/terraform"
+    layers_dir: "{{ playbook_dir }}/stack/terraform"
