@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Sorting credentials
+  hosts: localhost
   become: no
 
   tasks:
@@ -8,15 +9,12 @@
             role_arn: "{{ initial_role }}"
             role_session_name: "{{ initial_role.split('/')[-1] }}"
             region: "{{ deploy_region }}"
-          register: initial_role_credentials
-          when: initial_role|default(false)
 
         - set_fact:
             aws_credentials:
               access_key: "{{ initial_role_credentials.sts_creds.access_key }}"
               secret_key: "{{ initial_role_credentials.sts_creds.secret_key }}"
               session_token: "{{ initial_role_credentials.sts_creds.session_token }}"
-      when: initial_role|default(false)
       rescue:
         - set_fact:
             aws_credentials:
@@ -39,15 +37,11 @@
     target_dir: "{{ pwd }}/target"
     layers_dir: "{{ pwd }}/terraform"
     terrabot_vars: "{{ {} }}"
-    deploy_region: "{{ lookup('env', 'AWS_DEFAULT_REGION') }}"
     tf_upgrade: true
     dry_run: false
     backend_reconfigure: true
 
   pre_tasks:
-    - shell: >-
-        echo $AWS_SESSION_TOKEN && echo {{ aws_credentials.session_token }}
-
     - include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
       when:
         - remote_stack_url is defined
@@ -62,10 +56,11 @@
     - include_tasks: "{{ post_tasks_file }}"
       when: post_tasks_file is defined
 
-    - import_tasks: "{{ playbook_dir }}/inc/_teardown.yml"
+    - include_tasks: "{{ playbook_dir }}/inc/_teardown.yml"
 
-    - shell: >-
-        rm -rf {{ terrabot_remote_stack_clone_dir.path }}
+    - file:
+        path: "{{ terrabot_remote_stack_clone_dir.path }}"
+        state: absent
       when:
         - remote_stack_url is defined
         - remote_stack_version is defined
