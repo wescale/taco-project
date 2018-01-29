@@ -30,6 +30,9 @@
   shell: >-
     echo $AWS_ACCESS_KEY_ID &&
     echo $AWS_SECRET_ACCESS_KEY &&
+    echo $AWS_SECURITY_TOKEN &&
+    aws s3 cp s3://bfb-tfstates/tflayers/03-tower/sec.eu-west-1.tfstate win.tfstate &&
+    cat win.tfstate &&
     {{ init_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
