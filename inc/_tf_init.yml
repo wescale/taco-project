@@ -31,7 +31,7 @@
     echo $AWS_ACCESS_KEY_ID &&
     echo $AWS_SECRET_ACCESS_KEY &&
     echo $AWS_SECURITY_TOKEN &&
-    aws s3 cp s3://bfb-tfstates/tflayers/03-tower/sec.eu-west-1.tfstate win.tfstate &&
+    python -c "import sys; print('\n'.join(sys.path))" &&
     cat win.tfstate &&
     {{ init_command_line }}
   args:
