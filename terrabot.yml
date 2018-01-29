@@ -29,3 +29,9 @@
       when: post_tasks_file is defined
 
     - import_tasks: "{{ playbook_dir }}/inc/_teardown.yml"
+
+    - shell: >-
+        rm -rf {{ terrabot_remote_stack_clone_dir }}
+      when:
+        - remote_stack_url is defined
+        - remote_stack_version is defined
