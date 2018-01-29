@@ -32,7 +32,6 @@
     echo $AWS_SECRET_ACCESS_KEY &&
     echo $AWS_SECURITY_TOKEN &&
     python -c "import sys; print('\n'.join(sys.path))" &&
-    cat win.tfstate &&
     {{ init_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
