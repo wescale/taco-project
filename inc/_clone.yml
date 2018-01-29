@@ -1,0 +1,9 @@
+---
+- name: Clone
+  git:
+    repo: "{{ remote_stack_url }}"
+    dest: "{{ playbook_dir }}/stack"
+    version: "{{ remote_stack_version }}"
+
+- set_fact:
+    layers_dir: "{{ pwd }}/stack/terraform"

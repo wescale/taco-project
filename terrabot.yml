@@ -14,6 +14,11 @@
     backend_reconfigure: true
 
   pre_tasks:
+    - include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
+      when:
+        - remote_stack_url is defined
+        - remote_stack_version is defined
+
     - import_tasks: "{{ playbook_dir }}/inc/_setup.yml"
 
   tasks:
