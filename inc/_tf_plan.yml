@@ -56,14 +56,11 @@
     - not (auto_apply|default(false))
     - not dry_run
 
+- name: displaying plan
+  debug:
+    msg: "{{ tf_plan.stdout }}"
+  when: auto_apply|default(false)
+
 - pause:
-    prompt: |-
-      {{ tf_plan.stdout }}
-      #
-      ##
-      ###
-      #### READ CAREFULLY !!!
-      Continuing in 1 minute
     minutes: 1
-  when:
-    - auto_apply|default(false)
+  when: auto_apply|default(false)
