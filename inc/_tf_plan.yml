@@ -55,3 +55,15 @@
   when:
     - not (auto_apply|default(false))
     - not dry_run
+
+- pause:
+    prompt: |-
+      {{ tf_plan.stdout }}
+      #
+      ##
+      ###
+      #### READ CAREFULLY !!!
+      Continuing in 1 minute
+    minutes: 1
+  when:
+    - auto_apply|default(false)
