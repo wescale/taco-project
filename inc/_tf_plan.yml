@@ -61,6 +61,3 @@
     msg: "{{ tf_plan.stdout }}"
   when: auto_apply|default(false)
 
-- pause:
-    minutes: 1
-  when: auto_apply|default(false)
