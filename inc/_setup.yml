@@ -34,6 +34,15 @@
     path: "{{ target_layer_dir }}"
     state: directory
 
+- aws_kms_facts:
+    filters:
+      "tag:Name": "tfstates"
+    region: "{{ deploy_region }}"
+  register: kms_key_id
+
+- debug:
+  msg: kms_key_id
+
 - name: check for terrabot var files
   stat:
     path: "{{ item }}"
