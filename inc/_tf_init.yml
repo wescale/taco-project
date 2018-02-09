@@ -6,6 +6,7 @@
       {% for backend_conf in tflayer_backend_config.items() %}
       -backend-config="{{ backend_conf[0] }}={{ backend_conf[1] }}"
       {% endfor %}
+      -backend-config="kms_key_id=arn:aws:kms:eu-west-1:146214576240:key/ae5c5e65-8b80-4126-bc45-3e24f8c91816"
       -reconfigure={{ backend_reconfigure|default(true)|lower }}
 
 - debug:
