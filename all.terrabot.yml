@@ -41,11 +41,10 @@ cloudtrail_bucket_name: "bfb-cloudtrail-logs"
 awsconfig_bucket_name: "bfb-config"
 
 tflayer_backend_config:
-  bucket: "bfb-tfstates"
+  bucket: "{{ tfstates_bucket_name }}"
   key: "tflayers/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
   region: "{{ deploy_region }}"
   encrypt: 1
-#  dynamo_table: "bfb-terraform-lock"
 
-ec2_init_version: "1.1.0"
+ec2_init_version: "master"
 ec2_init_url: "https://readerbot:readerbot@code.priv.sec.cloud.bforbank.com/scm/an/ec2-init.git"
