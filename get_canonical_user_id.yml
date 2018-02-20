@@ -1,0 +1,47 @@
+- name: Sorting credentials
+  hosts: localhost
+  become: no
+
+  vars:
+    deploy_region: eu-west-1
+
+  vars_files:
+    - all.terrabot.yml
+
+  tasks:
+    - set_fact:
+        initial_role: "arn:aws:iam::{{ vars[ target_env + '_account_id' ] }}:role/BFBAdministrator"
+
+    - sts_assume_role:
+        role_arn: "{{ initial_role }}"
+        role_session_name: "{{ initial_role.split('/')[-1] }}"
+        region: "{{ deploy_region }}"
+      register: initial_assume_role
+
+    - set_fact:
+        aws_credentials:
+          access_key: "{{ initial_assume_role.sts_creds.access_key }}"
+          secret_key: "{{ initial_assume_role.sts_creds.secret_key }}"
+          session_token: "{{ initial_assume_role.sts_creds.session_token }}"
+
+- hosts: localhost
+  become: no
+
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws_credentials.access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_credentials.secret_key }}"
+    AWS_SESSION_TOKEN: "{{ aws_credentials.session_token }}"
+    AWS_SECURITY_TOKEN: "{{ aws_credentials.session_token }}"
+    AWS_DEFAULT_REGION: "{{ deploy_region }}"
+
+  tasks:
+    - shell: >-
+        aws s3api list-buckets
+      register: list_buckets
+
+    - set_fact:
+        canonical_user_id: "{{ (list_buckets.stdout|from_json).Owner.ID }}"
+
+    - debug:
+        msg: >-
+          {{ target_env }}_canonical_user_id: "{{ canonical_user_id }}"
