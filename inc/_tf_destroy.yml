@@ -23,3 +23,9 @@
     2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
   args:
     chdir: "{{ src_layer_dir }}"
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ layers_dir }}/{{ tflayer }}/terrabot_teardown.yml"
+      skip: true

@@ -1,16 +1,11 @@
 ---
-- include_vars: "{{ terrabot_var_file }}"
-
-- set_fact:
+- name: Prepare tfvar file name from yml file name
+  set_fact:
     target_terrabot_var_file: >-
       {{
         terrabot_var_file.split('/')[-1]
         |regex_replace('\.yml$','.tfvars.json')
       }}
-
-- name: blending vars into the great library
-  include_vars:
-    file: "{{ terrabot_var_file }}"
 
 - name: including only the var file
   include_vars:

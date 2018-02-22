@@ -23,7 +23,8 @@
               secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
               session_token: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
 
-- hosts: localhost
+- name: Terrabot wakes up
+  hosts: localhost
   become: no
 
   environment:
@@ -43,7 +44,8 @@
     backend_reconfigure: true
 
   pre_tasks:
-    - include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
+    - name: Clone remote stack
+      include_tasks: "{{ playbook_dir }}/inc/_clone.yml"
       when:
         - remote_stack_url is defined
         - remote_stack_version is defined
@@ -51,17 +53,20 @@
     - import_tasks: "{{ playbook_dir }}/inc/_setup.yml"
 
   tasks:
-    - include_tasks: "{{ playbook_dir }}/inc/_tf_{{ tfaction }}.yml"
+    - import_tasks: "{{ playbook_dir }}/inc/_tf_{{ tfaction }}.yml"
 
   post_tasks:
-    - include_tasks: "{{ post_tasks_file }}"
-      when: post_tasks_file is defined
 
-    - include_tasks: "{{ playbook_dir }}/inc/_teardown.yml"
-
-    - file:
+    - name: Clean remote stack
+      file:
         path: "{{ terrabot_remote_stack_clone_dir.path }}"
         state: absent
       when:
         - remote_stack_url is defined
         - remote_stack_version is defined
+
+    - name: TerraBot has finished.
+      debug:
+        msg:
+          - "SRC_LAYER={{ src_layer_dir }}"
+          - "TARGET_LAYER={{ target_layer_dir }}"

@@ -57,33 +57,29 @@
         |list
       }}
 
-- name: generate a json tfvar file for
-  include_tasks: "{{ playbook_dir }}/inc/_tfvars_addon.yml"
-  with_items: "{{ tfvars_addons }}"
-  loop_control:
-    loop_var: "terrabot_var_file"
-
 - name: get current_role
   shell:
     aws sts get-caller-identity --output text --query UserId | awk -F ':' '{ print $2 }'
-  register: actual_role
+  register: initial_deploy_role_raw
 
-#- sts_assume_role:
-#    role_arn: "arn:aws:iam::{{ sec_account_id }}:role/{{ actual_role.stdout }}"
-#    role_session_name: "{{ actual_role.stdout }}"
-#    region: "{{ deploy_region }}"
-#  register: kms_assume_role
-#
-#- name: get tfstate kms key
-#  shell:
-#    aws kms describe-key --key-id "alias/tfstates"
-#  register: kms_key_id
-#  environment:
-#    AWS_ACCESS_KEY_ID: "{{ kms_assume_role.sts_creds.access_key }}"
-#    AWS_SECRET_ACCESS_KEY: "{{ kms_assume_role.sts_creds.secret_key }}"
-#    AWS_SESSION_TOKEN: "{{ kms_assume_role.sts_creds.session_token }}"
-#    AWS_SECURITY_TOKEN: "{{ kms_assume_role.sts_creds.session_token }}"
-#    AWS_DEFAULT_REGION: "{{ deploy_region }}"
+- set_fact:
+    initial_deploy_role: "{{ initial_deploy_role_raw.stdout }}"
+
+- name: Include every yml var file linked to tflayer
+  include_vars: "{{ item }}"
+  with_items: "{{ tfvars_addons }}"
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ layers_dir }}/{{ tflayer }}/terrabot-setup.yml"
+      skip: true
+
+- name: generate a json tfvar file for
+  include_tasks: "{{ playbook_dir }}/inc/_tfvars_addon_spit.yml"
+  with_items: "{{ tfvars_addons }}"
+  loop_control:
+    loop_var: "terrabot_var_file"
 
 - set_fact:
     var_files_options: >-
@@ -92,3 +88,4 @@
         |map('regex_replace', '(.*)', '-var-file=\1')
         |list
       }}
+
