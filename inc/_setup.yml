@@ -74,7 +74,7 @@
     - files:
         - "{{ layers_dir }}/{{ tflayer }}/terrabot-setup.yml"
       skip: true
-  when: tfaction != "destroy"
+#  when: tfaction != "destroy"
 
 - name: generate a json tfvar file for
   include_tasks: "{{ playbook_dir }}/inc/_tfvars_addon_spit.yml"
