@@ -74,6 +74,7 @@
     - files:
         - "{{ layers_dir }}/{{ tflayer }}/terrabot-setup.yml"
       skip: true
+  when: tfaction != "destroy"
 
 - name: generate a json tfvar file for
   include_tasks: "{{ playbook_dir }}/inc/_tfvars_addon_spit.yml"
@@ -88,4 +89,11 @@
         |map('regex_replace', '(.*)', '-var-file=\1')
         |list
       }}
-
+      
+- set_fact:
+    tf_common_options: >-
+      {{ var_files_options|join(' ') }}
+      -var deploy_env={{ deploy_env }}
+      -var deploy_region={{ deploy_region }}
+      -var terrabot_all_layers_dir={{ target_all_layers_dir }}
+      -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate

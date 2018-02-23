@@ -17,16 +17,19 @@
     - not (auto_apply|default(false))
     - prompted is defined and prompted.user_input != 'apply'
 
+- name: Build apply command-line
+  set_fact:
+    apply_command_line: >-
+      terraform apply -auto-approve {{ tf_common_options }}
+      2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
+
+- debug:
+    var: apply_command_line
+    verbosity: 1
+
 - name: "{{ tflayer }} - apply"
   shell: >-
-    terraform apply
-    {{ var_files_options|join(' ') }}
-    -auto-approve
-    -var deploy_env={{ deploy_env }}
-    -var deploy_region={{ deploy_region }}
-    -var terrabot_all_layers_dir={{ target_all_layers_dir }}
-    -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate
-    2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
+    {{ apply_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
   when: not dry_run

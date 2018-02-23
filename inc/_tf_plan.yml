@@ -3,12 +3,7 @@
 
 - set_fact:
     plan_command_line: >-
-      terraform plan
-      {{ var_files_options|join(' ') }}
-      -var deploy_env={{ deploy_env }}
-      -var deploy_region={{ deploy_region }}
-      -var terrabot_all_layers_dir={{ target_all_layers_dir }}
-      -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate
+      terraform plan {{ tf_common_options }}
 
 - debug:
     var: plan_command_line

@@ -12,20 +12,24 @@
     - not (auto_apply|default(false))
     - prompted is defined and prompted.user_input != 'destroy'
 
-- name: "{{ tflayer }} - destroy"
-  shell: >-
-    terraform destroy -force
-    {{ var_files_options|join(' ') }}
-    -var deploy_env={{ deploy_env }}
-    -var deploy_region={{ deploy_region }}
-    -var terrabot_all_layers_dir={{ target_all_layers_dir }}
-    -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate
-    2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
-  args:
-    chdir: "{{ src_layer_dir }}"
-
 - include_tasks: "{{ item }}"
   with_first_found:
     - files:
-        - "{{ layers_dir }}/{{ tflayer }}/terrabot_teardown.yml"
+        - "{{ layers_dir }}/{{ tflayer }}/terrabot-teardown.yml"
       skip: true
+
+- name: Build destroy command-line
+  set_fact:
+    destroy_command_line: >-
+      terraform destroy -force {{ tf_common_options }}
+      2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
+
+- debug:
+    var: destroy_command_line
+    verbosity: 1
+
+- name: "{{ tflayer }} - destroy"
+  shell: >-
+    {{ destroy_command_line }}
+  args:
+    chdir: "{{ src_layer_dir }}"
