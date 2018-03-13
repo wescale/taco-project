@@ -20,7 +20,7 @@
 - name: Build apply command-line
   set_fact:
     apply_command_line: >-
-      terraform apply -auto-approve {{ tf_common_options }}
+      terraform apply -lock=false -auto-approve {{ tf_common_options }}
       2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
 
 - debug:
@@ -33,3 +33,10 @@
   args:
     chdir: "{{ src_layer_dir }}"
   when: not dry_run
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ post_apply_tasks|default('') }}"
+      skip: true
+
