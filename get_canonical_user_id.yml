@@ -4,13 +4,14 @@
 
   vars:
     deploy_region: eu-west-1
+    initial_role_name: WescaleAdmin
 
   vars_files:
     - all.terrabot.yml
 
   tasks:
     - set_fact:
-        initial_role: "arn:aws:iam::{{ vars[ target_env + '_account_id' ] }}:role/BFBAdministrator"
+        initial_role: "arn:aws:iam::{{ vars[ target_env + '_account_id' ] }}:role/{{ initial_role_name }}"
 
     - sts_assume_role:
         role_arn: "{{ initial_role }}"
