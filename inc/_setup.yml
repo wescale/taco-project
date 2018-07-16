@@ -39,12 +39,11 @@
     path: "{{ item }}"
   register: terrabot_vars_scan
   with_items:
-    - "{{ playbook_dir }}/all.terrabot.yml"
-    - "{{ layers_dir }}/all.terrabot.yml"
-    - "{{ layers_dir }}/common.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/all.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/all.{{ deploy_region }}.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.all.yml"
+    - "{{ playbook_dir }}/terrabot.vars.yml"
+    - "{{ layers_dir }}/all-layers.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/all-env.all-region.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/all-env.{{ deploy_region }}.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.all-region.yml"
     - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.yml"
 
 - name: cooking variables

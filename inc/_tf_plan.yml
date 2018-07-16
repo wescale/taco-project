@@ -48,7 +48,7 @@
       ###
       #### READ CAREFULLY !!!
       Press 'ENTER' to continue
-    register: tf_plan_prompt
+  register: tf_plan_prompt
   when:
     - not (auto_apply|default(false))
     - not dry_run

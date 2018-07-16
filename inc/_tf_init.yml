@@ -4,11 +4,11 @@
       terraform init -get=true
       -upgrade={{ tf_upgrade|default(false)|lower }}
       {% if tflayer_backend_config is defined %}
-        {% for backend_conf in tflayer_backend_config.items() %}
-        -backend-config="{{ backend_conf[0] }}={{ backend_conf[1] }}"
-        {% endfor %}
-      {% endif %}
-      -reconfigure={{ backend_reconfigure|default(true)|lower }}
+       {% for backend_conf in tflayer_backend_config.items() %}
+       -backend-config="{{ backend_conf[0] }}={{ backend_conf[1] }}"
+       {%- endfor %}
+      {% endif -%}
+      {% if backend_reconfigure %} -reconfigure{% endif %}
 
 - debug:
     msg: >-
