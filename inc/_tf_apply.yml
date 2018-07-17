@@ -33,10 +33,3 @@
   args:
     chdir: "{{ src_layer_dir }}"
   when: not dry_run
-
-- include_tasks: "{{ item }}"
-  with_first_found:
-    - files:
-        - "{{ post_apply_tasks|default('') }}"
-      skip: true
-
