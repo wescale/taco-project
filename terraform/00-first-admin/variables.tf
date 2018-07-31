@@ -1,0 +1,3 @@
+variable "basename" {
+  type = "string"
+}

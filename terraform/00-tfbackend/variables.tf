@@ -9,3 +9,8 @@ variable "account_id_list" {
 variable "basename" {
   type = "string"
 }
+
+variable "first_admin_name" {
+  type = "string"
+}
+

@@ -17,12 +17,11 @@ module "tfbackend" {
   bucket_tfstates_name = "${var.basename}-tfstates"
 
   administrators = [
-    "arn:aws:iam::${var.account_id_list.sec}:role/${var.organization_role_name}"
+    "arn:aws:iam::${var.account_id_list.sec}:role/${var.organization_role_name}",
   ]
 
   users = [
-    "arn:aws:iam::${var.root_account_id}:role/LumoAdmin",
-    "arn:aws:iam::${var.root_account_id}:role/keepers-base",
+    "arn:aws:iam::${var.account_id_list.root}:user/${var.first_admin_name}",
   ]
 
   tags {

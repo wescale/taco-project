@@ -14,3 +14,4 @@ become_sec_role.sh
 *.osgi.yml
 terraform/temp/
 ssh.cfg
+env.sh
