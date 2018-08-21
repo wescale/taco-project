@@ -23,3 +23,9 @@ resource "aws_iam_account_alias" "subaccount_alias" {
 
   account_alias = "${local.subaccount_name}"
 }
+
+resource "null_resource" "order" {
+  triggers {
+    order = "${var.create_after}"
+  }
+}

@@ -18,3 +18,8 @@ variable "subname" {
 variable "root_email" {
   type = "string"
 }
+
+variable "create_after" {
+  type    = "string"
+  default = "none"
+}

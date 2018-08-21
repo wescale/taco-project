@@ -16,9 +16,38 @@
       {{ init_command_line }}
     verbosity: 1
 
+- copy:
+    dest: "{{ src_layer_dir }}/backend.tf"
+    content: |-
+      terraform {
+        backend "s3" {}
+      }
+  when: local_state_to_s3|default(false)
+
 - name: "{{ tflayer }} - init"
   shell: >-
     {{ init_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
   register: tf_init
+
+- debug:
+    msg: >-
+      cd {{ src_layer_dir }} &&
+      terraform state push {{ expected_local_tfstate }}
+    verbosity: 1
+
+- name: "{{ tflayer }} - migrate"
+  shell: >-
+    terraform state push {{ expected_local_tfstate }}
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_state_push
+  when: local_state_to_s3|default(false)
+
+- name: displaying state push
+  debug:
+    msg: "{{ tf_state_push.stdout }}"
+    verbosity: 2
+  when: local_state_to_s3|default(false)
+

@@ -2,3 +2,24 @@
 basename: "lclaws1"
 first_admin_name: "lclaws1-administrator"
 root_email: "amaury+lclaws1@wescale.fr"
+
+main_region: "eu-west-1"
+
+account_id_list:
+  root: "531520244960"
+  sec: "914948289027"
+  dev: "568745680741"
+  rec: "754652232549"
+  pre: "112530507332"
+  prd: "079964501722"
+
+organization_role_name: "OrganizationAdmin"
+
+tflayer_backend_config:
+  bucket: "lclaws1-tfstates"
+  key: "tflayers/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
+  region: "eu-west-1"
+  encrypt: true
+  kms_key_id: "arn:aws:kms:eu-west-1:914948289027:key/824cd8d0-1aa9-4db7-89cd-8cb098632676"
+  dynamodb_table: "lclaws1-tfstates-lock"
+

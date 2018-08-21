@@ -14,3 +14,6 @@ variable "first_admin_name" {
   type = "string"
 }
 
+variable "main_region" {
+  type = "string"
+}

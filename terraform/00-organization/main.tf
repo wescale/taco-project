@@ -15,6 +15,8 @@ module "sec_account" {
   basename   = "${var.basename}"
   subname    = "sec"
   root_email = "${local.split_email[0]}+aws-sec@${local.split_email[1]}"
+
+  organization_role_name = "${var.organization_role_name}"
 }
 
 module "dev_account" {
@@ -23,6 +25,9 @@ module "dev_account" {
   basename   = "${var.basename}"
   subname    = "dev"
   root_email = "${local.split_email[0]}+aws-dev@${local.split_email[1]}"
+
+  organization_role_name = "${var.organization_role_name}"
+  create_after           = "${module.sec_account.id}"
 }
 
 module "rec_account" {
@@ -31,6 +36,9 @@ module "rec_account" {
   basename   = "${var.basename}"
   subname    = "rec"
   root_email = "${local.split_email[0]}+aws-rec@${local.split_email[1]}"
+
+  organization_role_name = "${var.organization_role_name}"
+  create_after           = "${module.dev_account.id}"
 }
 
 module "pre_account" {
@@ -39,6 +47,9 @@ module "pre_account" {
   basename   = "${var.basename}"
   subname    = "pre"
   root_email = "${local.split_email[0]}+aws-pre@${local.split_email[1]}"
+
+  organization_role_name = "${var.organization_role_name}"
+  create_after           = "${module.rec_account.id}"
 }
 
 module "prd_account" {
@@ -47,6 +58,9 @@ module "prd_account" {
   basename   = "${var.basename}"
   subname    = "prd"
   root_email = "${local.split_email[0]}+aws-prd@${local.split_email[1]}"
+
+  organization_role_name = "${var.organization_role_name}"
+  create_after           = "${module.prd_account.id}"
 }
 
 data "aws_caller_identity" "current" {}

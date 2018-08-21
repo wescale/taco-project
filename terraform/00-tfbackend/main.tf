@@ -3,7 +3,7 @@ provider "aws" {
 
   assume_role {
     session_name = "${var.organization_role_name}"
-    role_arn     = "arn:aws:iam::${var.account_id_list.sec}:role/LumoAdmin"
+    role_arn     = "arn:aws:iam::${var.account_id_list["sec"]}:role/${var.organization_role_name}"
   }
 }
 
@@ -13,15 +13,15 @@ module "tfbackend" {
   }
 
   source               = "../mod_tfbackend_master"
-  deploy_region        = "eu-west-3"
+  deploy_region        = "${var.main_region}"
   bucket_tfstates_name = "${var.basename}-tfstates"
 
   administrators = [
-    "arn:aws:iam::${var.account_id_list.sec}:role/${var.organization_role_name}",
+    "arn:aws:iam::${var.account_id_list["sec"]}:role/${var.organization_role_name}",
   ]
 
   users = [
-    "arn:aws:iam::${var.account_id_list.root}:user/${var.first_admin_name}",
+    "arn:aws:iam::${var.account_id_list["root"]}:user/${var.first_admin_name}",
   ]
 
   tags {

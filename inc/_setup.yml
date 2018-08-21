@@ -82,6 +82,7 @@
     loop_var: "terrabot_var_file"
 
 - set_fact:
+    expected_local_tfstate: "{{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
     var_files_options: >-
       {{
         generated_tfvars|default([])
@@ -95,4 +96,4 @@
       -var deploy_env={{ deploy_env }}
       -var deploy_region={{ deploy_region }}
       -var terrabot_all_layers_dir={{ target_all_layers_dir }}
-      -state={{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate
+      -state={{ expected_local_tfstate }}
