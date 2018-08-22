@@ -21,3 +21,6 @@ move-organization-backend:
 
 move-tfbackend-backend:
 	ansible-playbook terrabot.yml -e tflayer=00-tfbackend -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=plan -e local_state_to_s3=true
+
+config:
+	ansible-playbook terrabot.yml -e tflayer=00-config -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=apply -e auto_apply=true
