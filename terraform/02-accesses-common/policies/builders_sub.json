@@ -1,0 +1,20 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sts:DecodeAuthorizationMessage",
+        "ec2:*",
+        "autoscaling:*",
+        "elasticloadbalancing:*"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": ["eu-west-1"]
+        }
+      }
+    }
+  ]
+}

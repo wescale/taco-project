@@ -1,0 +1,54 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sts:DecodeAuthorizationMessage",
+        "ec2:DescribeAccountAttributes"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "${tfstate_kms_key_arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": [
+        ${assumable_roles}
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${tfstate_bucket_name}",
+        "arn:aws:s3:::${tfstate_bucket_name}/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:PutObjectVersionAcl",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::${tfstate_bucket_name}/tflayers/04-*"
+    }
+  ]
+}

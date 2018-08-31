@@ -1,0 +1,64 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sts:DecodeAuthorizationMessage",
+        "ec2:*",
+        "cloudfront:*"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": ["eu-west-1"]
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "elasticloadbalancing:*",
+        "route53:*",
+        "route53domains:*",
+        "autoscaling:*",
+        "iam:PassRole",
+        "rds:*",
+        "acm:ListCertificates",
+        "acm:RequestCertificates",
+        "acm:DescribeCertificates",
+        "acm:DescribeCertificate",
+        "acm:GetCertificate",
+        "acm:ListTagsForCertificate",
+        "cloudfront:*",
+        "events:*",
+        "lambda:*",
+        "ssm:*",
+        "waf:*",
+        "sns:*Subscription*",
+        "sns:Subscribe",
+        "sns:Unsubscribe"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Deny",
+      "Action": [
+        "rds:Delete*"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": ["eu-west-1"]
+        }
+      }
+    }
+  ]
+}
