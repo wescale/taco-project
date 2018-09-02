@@ -13,7 +13,7 @@ append_organization_to_terrabot_vars:
 
 
 tfbackend:
-	ansible-playbook terrabot.yml -e auto_apply=true -e tflayer=00-tfbackend -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=apply
+	ansible-playbook terrabot.yml -e tflayer=00-tfbackend -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=apply
 
 append_backend_conf_to_terrabot_vars:
 	terraform output -state=target/terrabot/00-tfbackend/sec.eu-west-1.tfstate backend_config_map >> terrabot.vars.yml
@@ -30,4 +30,4 @@ move_tfbackend_backend:
 
 
 config:
-	ansible-playbook terrabot.yml -e tflayer=00-config -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=apply -e auto_apply=true
+	ansible-playbook terrabot.yml -e tflayer=00-config -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=apply
