@@ -10,13 +10,15 @@
       {% endif -%}
       {% if backend_reconfigure %} -reconfigure{% endif %}
 
-- debug:
+- name: "Add -v for this debug message"
+  debug:
     msg: >-
       cd {{ src_layer_dir }} &&
       {{ init_command_line }}
     verbosity: 1
 
-- copy:
+- name: "Generate backend.tf if local_state_to_s3 is set to true"
+  copy:
     dest: "{{ src_layer_dir }}/backend.tf"
     content: |-
       terraform {

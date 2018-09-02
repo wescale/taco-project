@@ -34,8 +34,8 @@ basename: "terrabot"
 # The email you used for creating the account one first step.
 root_email: "your_root@email"
 
-# Be sure to have at least one empty line at the end of the file.
-# Next steps will have to append to this file.
+# The main region you will be operating from for this deployment.
+main_region: "eu-west-1"
 
 ```
 
@@ -51,6 +51,8 @@ make append_first_admin_name_to_terrabot_vars
 * Source them in a terminal and run:
 
 ```
+make organization
+make append_organization_to_terrabot_vars
 make tfbackend
 make append_backend_conf_to_terrabot_vars
 make move_first_admin_backend

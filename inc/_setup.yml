@@ -61,7 +61,8 @@
     aws sts get-caller-identity --output text --query UserId | awk -F ':' '{ print $2 }'
   register: initial_deploy_role_raw
 
-- set_fact:
+- name: variable cooking
+  set_fact:
     initial_deploy_role: "{{ initial_deploy_role_raw.stdout }}"
 
 - name: Include every yml var file linked to tflayer

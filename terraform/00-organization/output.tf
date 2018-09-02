@@ -11,6 +11,7 @@ output "accounts_id" {
 
 output "accounts_id_for_terrabot" {
   value = <<EOF
+
 account_id_list:
   root: "${data.aws_caller_identity.current.account_id}"
   sec: "${module.sec_account.id}"

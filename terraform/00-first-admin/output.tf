@@ -4,7 +4,7 @@ output "first_admin" {
 
 output "for_terrabot" {
   value = <<EOF
-first_admin_name: "${aws_iam_user.first.name}"
 
+first_admin_name: "${aws_iam_user.first.name}"
 EOF
 }
