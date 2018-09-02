@@ -34,25 +34,31 @@ basename: "terrabot"
 # The email you used for creating the account one first step.
 root_email: "your_root@email"
 
+# Be sure to have at least one empty line at the end of the file.
+# Next steps will have to append to this file.
+
 ```
 
 * Create an access key and a secret key
 * Source them in a terminal and run:
 
 ```
-make 00-first-admin
+make first_admin
+make append_first_admin_name_to_terrabot_vars
 ```
 
-add first-admin name to terrabot.vars.yml
-add root_email to terrabot.vars
+* Create an access key and a secret key *for the first admin account*
+* Source them in a terminal and run:
 
-switch to first_admin credentials
+```
+make tfbackend
+make append_backend_conf_to_terrabot_vars
+make move_first_admin_backend
+make move_organization_backend
+make move_tfbackend_backend
+```
 
-* Wait for the support ticket to complete.
-* 
+At this point you have setup:
 
-make organization
-
-make append_organization_to_terrabot_vars
-check terrabot.vars.yml to ensure syntax
-
+* a whole organization, with a SEC account aimed at hosting common services for the other accounts.
+* an S3 bucket in the SEC account for hosting the tfstate files.
