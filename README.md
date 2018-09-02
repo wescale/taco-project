@@ -64,3 +64,12 @@ At this point you have setup:
 
 * a whole organization, with a SEC account aimed at hosting common services for the other accounts.
 * an S3 bucket in the SEC account for hosting the tfstate files.
+
+## Coming soon in this documentation
+
+* User creation procedure
+* The user tribes
+* How to work efficiently as a tribe member
+* Network landscape
+* Nat
+* Peering
