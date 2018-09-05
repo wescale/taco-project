@@ -21,7 +21,7 @@
 - name: Build destroy command-line
   set_fact:
     destroy_command_line: >-
-      terraform destroy -lock=false -force {{ tf_common_options }}
+      terraform destroy -force {{ tf_common_options }}
       2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
 
 - debug:

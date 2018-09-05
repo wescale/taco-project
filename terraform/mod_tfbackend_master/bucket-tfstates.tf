@@ -1,4 +1,6 @@
 resource "aws_s3_bucket" "bucket_tfstates" {
+  provider = "aws.bucket"
+
   bucket = "${var.bucket_tfstates_name}"
   acl    = "private"
 
@@ -30,6 +32,7 @@ resource "aws_s3_bucket" "bucket_tfstates" {
 }
 
 data "aws_iam_policy_document" "bucket_tfstates_policy" {
+  provider = "aws.bucket"
   statement {
     sid    = "Admins can do everything"
     effect = "Allow"

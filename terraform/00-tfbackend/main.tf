@@ -1,4 +1,8 @@
 provider "aws" {
+  alias = "root"
+}
+
+provider "aws" {
   alias = "sec"
 
   assume_role {
@@ -9,7 +13,8 @@ provider "aws" {
 
 module "tfbackend" {
   providers = {
-    aws = "aws.sec"
+    aws.bucket = "aws.sec"
+    aws.dynamo = "aws.root"
   }
 
   source               = "../mod_tfbackend_master"

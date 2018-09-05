@@ -181,8 +181,7 @@
       ],
       "Resource": [
         "arn:aws:s3:::${tfstate_bucket_name}/tflayers/01-*",
-        "arn:aws:s3:::${tfstate_bucket_name}/tflayers/02-*",
-        "arn:aws:s3:::${tfstate_bucket_name}/tflayers/04-*"
+        "arn:aws:s3:::${tfstate_bucket_name}/tflayers/02-*"
       ]
     },
     {

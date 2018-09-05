@@ -1,4 +1,7 @@
 resource "aws_dynamodb_table" "dynamodb_tfstates" {
+
+  provider = "aws.dynamo"
+
   name           = "${var.bucket_tfstates_name}-lock"
   read_capacity  = 5
   write_capacity = 5

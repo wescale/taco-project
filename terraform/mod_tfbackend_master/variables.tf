@@ -22,3 +22,12 @@ variable "users" {
 variable "tags" {
   type = "map"
 }
+
+
+provider "aws" {
+  alias = "bucket"
+}
+
+provider "aws" {
+  alias = "dynamo"
+}

@@ -1,4 +1,5 @@
 resource "aws_kms_key" "kms_tfstates" {
+  provider = "aws.bucket"
   description = "Terraform tfstates bucket encryption key"
   policy      = "${data.aws_iam_policy_document.kms_tfstate_policy.json}"
 
@@ -8,6 +9,7 @@ resource "aws_kms_key" "kms_tfstates" {
 }
 
 data "aws_iam_policy_document" "kms_tfstate_policy" {
+  provider = "aws.bucket"
   statement {
     sid = "Allow access for Key Administrators"
 
@@ -45,6 +47,7 @@ data "aws_iam_policy_document" "kms_tfstate_policy" {
 }
 
 resource "aws_kms_alias" "tfstates" {
+  provider = "aws.bucket"
   name          = "alias/${var.bucket_tfstates_name}"
   target_key_id = "${aws_kms_key.kms_tfstates.key_id}"
 }

@@ -3,7 +3,7 @@
 
 - set_fact:
     plan_command_line: >-
-      terraform plan -lock=false {{ tf_common_options }}
+      terraform plan {{ tf_common_options }}
 
 - debug:
     var: plan_command_line
