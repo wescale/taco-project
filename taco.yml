@@ -5,19 +5,22 @@
 
   tasks:
     - block:
-        - sts_assume_role:
+        - name: try to assume a role before starting terraform work
+          sts_assume_role:
             role_arn: "{{ initial_role }}"
             role_session_name: "{{ initial_role.split('/')[-1] }}"
             region: "{{ deploy_region }}"
           register: initial_assume_role
 
-        - set_fact:
+        - name: role assumed, picking vars to feed terraform env vars
+          set_fact:
             aws_credentials:
               access_key: "{{ initial_assume_role.sts_creds.access_key }}"
               secret_key: "{{ initial_assume_role.sts_creds.secret_key }}"
               session_token: "{{ initial_assume_role.sts_creds.session_token }}"
       rescue:
-        - set_fact:
+        - name: fallback on using AWS env vars
+          set_fact:
             aws_credentials:
               access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
               secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"

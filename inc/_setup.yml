@@ -90,7 +90,7 @@
         |map('regex_replace', '(.*)', '-var-file=\1')
         |list
       }}
-      
+
 - set_fact:
     tf_common_options: >-
       {{ var_files_options|join(' ') }}
