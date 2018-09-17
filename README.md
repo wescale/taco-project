@@ -1,4 +1,5 @@
-# Terrabot
+# The T.A.C.O. project
+### Terraform and Ansible, Combined & Organized
 
 ## What you will find here
 
@@ -73,3 +74,6 @@ At this point you have setup:
 * Network landscape
 * Nat
 * Peering
+
+TODO
+* exercice 3 le coup des 10m sur taint
