@@ -39,12 +39,12 @@
     path: "{{ item }}"
   register: taco_vars_scan
   with_items:
-    - "{{ playbook_dir }}/taco.vars.yml"
-    - "{{ layers_dir }}/all-layers.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/all-env.all-region.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/all-env.{{ deploy_region }}.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.all-region.yml"
-    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.yml"
+    - "{{ playbook_dir }}/defaults.taco.yml"
+    - "{{ layers_dir }}/all-layers.taco.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/all-env.all-region.taco.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/all-env.{{ deploy_region }}.taco.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.all-region.taco.yml"
+    - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.taco.yml"
 
 - name: cooking variables
   set_fact:

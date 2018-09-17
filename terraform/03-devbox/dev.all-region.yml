@@ -1,2 +1,0 @@
----
-public_key_path: "{{ pwd }}/secrets/lclaws-dev.rsa.pub"

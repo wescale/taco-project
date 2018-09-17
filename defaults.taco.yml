@@ -1,0 +1,12 @@
+---
+# This is a short label with only alphanumeric.
+# It will be use to prefix every AWS account of your organization.
+basename: "weshare201809"
+
+# The email you used for creating the account one first step.
+root_email: "amaury+weshare201809@wescale.fr"
+
+# The main region you will be operating from for this deployment.
+main_region: "eu-west-1"
+first_admin_name: "weshare201809-administrator"
+

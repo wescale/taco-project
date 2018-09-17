@@ -1,5 +1,5 @@
 # The T.A.C.O. project
-## Terraform and Ansible, Combined & Organized
+## Terraform & Ansible, Combined & Organized
 
 ### Where am I ?
 
@@ -17,7 +17,7 @@ For three simple reasons:
 
 * Ansible makes it easy to open and hack the project if you want/need to.
 * Ansible is great at mixing variables files and templating.
-* On the primary contributor's workstation: `[ "$MY_PREFERED_TOOL" = "ansible" ]` returns `0`
+* On the project founder's workstation: `[ "$MY_PREFERED_TOOL" = "ansible" ]` returns `0`
 
 ### What will you need on your workstation to use it ?
 
