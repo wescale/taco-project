@@ -58,7 +58,7 @@
 
     - name: Clean remote stack
       file:
-        path: "{{ terrabot_remote_stack_clone_dir.path }}"
+        path: "{{ taco_remote_stack_clone_dir.path }}"
         state: absent
       when:
         - remote_stack_url is defined

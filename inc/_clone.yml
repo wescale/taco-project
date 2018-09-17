@@ -1,16 +1,16 @@
 ---
 - name: Create temporary clone directory
   tempfile:
-    suffix: "terrabot"
+    suffix: "taco"
     state: directory
-  register: terrabot_remote_stack_clone_dir
+  register: taco_remote_stack_clone_dir
 
 - name: Clone target repository
   git:
     repo: "{{ remote_stack_url }}"
-    dest: "{{ terrabot_remote_stack_clone_dir.path }}"
+    dest: "{{ taco_remote_stack_clone_dir.path }}"
     version: "{{ remote_stack_version }}"
 
 - set_fact:
-    layers_dir: "{{ terrabot_remote_stack_clone_dir.path }}/terraform"
-    target_dir: "{{ terrabot_remote_stack_clone_dir.path }}/target"
+    layers_dir: "{{ taco_remote_stack_clone_dir.path }}/terraform"
+    target_dir: "{{ taco_remote_stack_clone_dir.path }}/target"

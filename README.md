@@ -24,13 +24,13 @@
     
 Do not forget to put a kind message for support team in your ticket, they do a great job.
 
-* Create a new file named `terrabot.vars.yml` at the root of the project and fill it like this:
+* Create a new file named `taco.vars.yml` at the root of the project and fill it like this:
 
 ```
 ---
 # This is a short label with only alphanumeric.
 # It will be use to prefix every AWS account of your organization.
-basename: "terrabot"
+basename: "taco"
 
 # The email you used for creating the account one first step.
 root_email: "your_root@email"
@@ -45,7 +45,7 @@ main_region: "eu-west-1"
 
 ```
 make first_admin
-make append_first_admin_name_to_terrabot_vars
+make append_first_admin_name_to_taco_vars
 ```
 
 * Create an access key and a secret key *for the first admin account*
@@ -53,9 +53,9 @@ make append_first_admin_name_to_terrabot_vars
 
 ```
 make organization
-make append_organization_to_terrabot_vars
+make append_organization_to_taco_vars
 make tfbackend
-make append_backend_conf_to_terrabot_vars
+make append_backend_conf_to_taco_vars
 make move_first_admin_backend
 make move_organization_backend
 make move_tfbackend_backend

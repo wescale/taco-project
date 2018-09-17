@@ -15,7 +15,7 @@
 - include_tasks: "{{ item }}"
   with_first_found:
     - files:
-        - "{{ layers_dir }}/{{ tflayer }}/terrabot-teardown.yml"
+        - "{{ layers_dir }}/{{ tflayer }}/taco-teardown.yml"
       skip: true
 
 - name: Build destroy command-line

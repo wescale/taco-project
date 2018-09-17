@@ -1,20 +1,20 @@
 ---
 - name: Prepare tfvar file name from yml file name
   set_fact:
-    target_terrabot_var_file: >-
+    target_taco_var_file: >-
       {{
-        terrabot_var_file.split('/')[-1]
+        taco_var_file.split('/')[-1]
         |regex_replace('\.yml$','.tfvars.json')
       }}
 
 - name: including only the var file
   include_vars:
-    file: "{{ terrabot_var_file }}"
+    file: "{{ taco_var_file }}"
     name: self_vars_raw
 
 - name: generate terraform variables file
   copy:
-    dest: "{{ target_layer_dir }}/{{ target_terrabot_var_file }}"
+    dest: "{{ target_layer_dir }}/{{ target_taco_var_file }}"
     content: |-
       {{ self_vars_raw|to_nice_json }}
 
@@ -22,5 +22,5 @@
     generated_tfvars: >-
       {{
         generated_tfvars|default([])
-        + [target_layer_dir + '/' + target_terrabot_var_file]
+        + [target_layer_dir + '/' + target_taco_var_file]
       }}

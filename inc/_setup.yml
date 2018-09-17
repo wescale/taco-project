@@ -14,8 +14,8 @@
 - name: variable cooking
   set_fact:
     src_layer_dir: "{{ layers_dir }}/{{ tflayer }}"
-    target_all_layers_dir: "{{ target_dir }}/terrabot"
-    target_layer_dir: "{{ target_dir }}/terrabot/{{ tflayer }}"
+    target_all_layers_dir: "{{ target_dir }}/taco"
+    target_layer_dir: "{{ target_dir }}/taco/{{ tflayer }}"
 
 - name: check that target terraform layer is found
   stat:
@@ -34,12 +34,12 @@
     path: "{{ target_layer_dir }}"
     state: directory
 
-- name: check for terrabot var files
+- name: check for taco var files
   stat:
     path: "{{ item }}"
-  register: terrabot_vars_scan
+  register: taco_vars_scan
   with_items:
-    - "{{ playbook_dir }}/terrabot.vars.yml"
+    - "{{ playbook_dir }}/taco.vars.yml"
     - "{{ layers_dir }}/all-layers.yml"
     - "{{ layers_dir }}/{{ tflayer }}/all-env.all-region.yml"
     - "{{ layers_dir }}/{{ tflayer }}/all-env.{{ deploy_region }}.yml"
@@ -50,7 +50,7 @@
   set_fact:
     tfvars_addons: >-
       {{
-        terrabot_vars_scan.results
+        taco_vars_scan.results
         |selectattr('stat.exists')
         |map(attribute='stat.path')
         |list
@@ -72,7 +72,7 @@
 - include_tasks: "{{ item }}"
   with_first_found:
     - files:
-        - "{{ layers_dir }}/{{ tflayer }}/terrabot-setup.yml"
+        - "{{ layers_dir }}/{{ tflayer }}/taco-setup.yml"
       skip: true
 #  when: tfaction != "destroy"
 
@@ -80,7 +80,7 @@
   include_tasks: "{{ playbook_dir }}/inc/_tfvars_addon_spit.yml"
   with_items: "{{ tfvars_addons }}"
   loop_control:
-    loop_var: "terrabot_var_file"
+    loop_var: "taco_var_file"
 
 - set_fact:
     expected_local_tfstate: "{{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
@@ -96,5 +96,5 @@
       {{ var_files_options|join(' ') }}
       -var deploy_env={{ deploy_env }}
       -var deploy_region={{ deploy_region }}
-      -var terrabot_all_layers_dir={{ target_all_layers_dir }}
+      -var taco_all_layers_dir={{ target_all_layers_dir }}
       -state={{ expected_local_tfstate }}

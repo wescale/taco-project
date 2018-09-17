@@ -15,4 +15,5 @@ become_sec_role.sh
 terraform/temp/
 ssh.cfg
 env.sh
-terrabot.vars.yml
+taco.vars.yml
+lclaws1.terrabot.vars.yml

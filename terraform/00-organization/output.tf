@@ -9,7 +9,7 @@ output "accounts_id" {
   }
 }
 
-output "accounts_id_for_terrabot" {
+output "accounts_id_for_taco" {
   value = <<EOF
 
 account_id_list:
