@@ -1,0 +1,19 @@
+---
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
+- name: Build refresh command-line
+  set_fact:
+    refresh_command_line: >-
+      terraform refresh {{ tf_common_options }}
+      2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
+
+- debug:
+    var: refresh_command_line
+    verbosity: 1
+
+- name: "{{ tflayer }} - refresh"
+  shell: >-
+    {{ refresh_command_line }}
+  args:
+    chdir: "{{ src_layer_dir }}"
+  when: not dry_run

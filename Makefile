@@ -31,3 +31,7 @@ move_tfbackend_backend:
 
 config:
 	ansible-playbook taco.yml -e tflayer=00-config -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=apply
+
+generate_outputs:
+        ansible-playbook taco.yml -e tflayer=03-outputs -e deploy_env=dev -e deploy_region=eu-west-1 -e tfaction=apply
+        ansible-playbook taco.yml -e tflayer=03-outputs -e deploy_env=dev -e deploy_region=eu-west-1 -e tfaction=output -e output_var=ssh_cfg -e output_file=ssh.cfg
