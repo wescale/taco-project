@@ -84,10 +84,11 @@
 
 - set_fact:
     expected_local_tfstate: "{{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
+# format tfvars file as cmd line parameters
     var_files_options: >-
       {{
         generated_tfvars|default([])
-        |map('regex_replace', '(.*)', '-var-file=\1')
+        |map('regex_replace', '^(.*)$', '-var-file=\1')
         |list
       }}
 
