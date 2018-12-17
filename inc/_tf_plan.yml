@@ -3,7 +3,7 @@
 
 - set_fact:
     plan_command_line: >-
-      terraform plan {{ tf_common_options }}
+      terraform plan {{ tf_common_options }} | landscape
 
 - debug:
     var: plan_command_line
