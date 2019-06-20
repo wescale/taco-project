@@ -51,7 +51,7 @@
   register: tf_plan_prompt
   when:
     - not (auto_apply|default(false))
-    - not dry_run
+    - not dry_run|bool
 
 - name: displaying plan
   debug:

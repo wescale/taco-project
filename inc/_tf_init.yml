@@ -29,6 +29,7 @@
 - name: "{{ tflayer }} - init"
   shell: >-
     {{ init_command_line }}
+
   args:
     chdir: "{{ src_layer_dir }}"
   register: tf_init

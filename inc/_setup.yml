@@ -14,7 +14,7 @@
 - name: variable cooking
   set_fact:
     src_layer_dir: "{{ layers_dir }}/{{ tflayer }}"
-    target_all_layers_dir: "{{ target_dir }}/taco"
+    taco_all_layers_dir: "{{ target_dir }}/taco"
     target_layer_dir: "{{ target_dir }}/taco/{{ tflayer }}"
 
 - name: check that target terraform layer is found
@@ -76,25 +76,27 @@
       skip: true
 #  when: tfaction != "destroy"
 
-- name: generate a json tfvar file for
-  include_tasks: "{{ playbook_dir }}/inc/_tfvars_addon_spit.yml"
-  with_items: "{{ tfvars_addons }}"
-  loop_control:
-    loop_var: "taco_var_file"
+- name: get useful var list
+  shell: >-
+    grep variable *.tf | sed -r 's/^.*?"(.*?)".*$/\1/'
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: claimed_vars
+
+- name: Create jinja template of claimed variables
+  template:
+    src: "{{ playbook_dir }}/inc/layer_vars_claim.j2"
+    dest: "{{ target_layer_dir }}/taco.tfvars.j2"
+
+- name: create terraform var file (JSON format)
+  template:
+    src: "{{ target_layer_dir }}/taco.tfvars.j2"
+    dest: "{{ target_layer_dir }}/taco.tfvars.json"
 
 - set_fact:
     expected_local_tfstate: "{{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
-    var_files_options: >-
-      {{
-        generated_tfvars|default([])
-        |map('regex_replace', '(.*)', '-var-file=\1')
-        |list
-      }}
 
 - set_fact:
     tf_common_options: >-
-      {{ var_files_options|join(' ') }}
-      -var deploy_env={{ deploy_env }}
-      -var deploy_region={{ deploy_region }}
-      -var taco_all_layers_dir={{ target_all_layers_dir }}
+      -var-file={{ target_layer_dir }}/taco.tfvars.json
       -state={{ expected_local_tfstate }}

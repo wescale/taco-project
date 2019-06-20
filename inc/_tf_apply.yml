@@ -6,11 +6,11 @@
   register: prompted
   when:
     - not (auto_apply|default(false))
-    - not dry_run
+    - not (dry_run|bool)
 
 - meta: end_play
   when:
-    - dry_run
+    - dry_run|bool
 
 - meta: end_play
   when:
@@ -32,4 +32,4 @@
     {{ apply_command_line }}
   args:
     chdir: "{{ src_layer_dir }}"
-  when: not dry_run
+  when: not (dry_run|bool)
