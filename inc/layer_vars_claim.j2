@@ -1,6 +1,8 @@
 {% set comma = joiner(",") %}
 {
 {% for varclaim in claimed_vars %}
+{% if vars[varclaim] is defined %}
   {{ comma() }}"{{ varclaim }}": {%raw%}{{{%endraw%} {{varclaim}}|to_nice_json {%raw%}}}{%endraw%}
+{% endif %}
 {% endfor %}
 }

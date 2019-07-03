@@ -76,20 +76,24 @@
       skip: true
 #  when: tfaction != "destroy"
 
-- name: get useful var list
-  shell: >-
-    grep variable *.tf
-  args:
-    chdir: "{{ src_layer_dir }}"
-  register: claimed_vars_sh
+- block:
+    - name: get useful var list
+      shell: >-
+        grep variable *.tf
+      args:
+        chdir: "{{ src_layer_dir }}"
+      register: claimed_vars_sh
 
-- set_fact:
-    claimed_vars: >-
-      {{
-        claimed_vars|default([])
-        + [item | regex_replace('^.*?"(.*?)".*$', '\1')]
-      }}
-  loop: "{{ claimed_vars_sh.stdout_lines }}"
+    - set_fact:
+        claimed_vars: >-
+          {{
+            claimed_vars|default([])
+            + [item | regex_replace('^.*?"(.*?)".*$', '\1')]
+          }}
+      loop: "{{ claimed_vars_sh.stdout_lines }}"
+  rescue:
+    - set_fact:
+        claimed_vars: []
 
 
 - name: Create jinja template of claimed variables
