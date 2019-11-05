@@ -6,10 +6,10 @@
 This is the homepage of the T.A.C.O. project obviously.
 
 This is an Ansible toolkit aimed at:
- 
+
 * making a standardized use of Terraform.
 * adding before-and-after Ansible capabilities to any Terraform stack.
-* bringing the full power of Ansible variables engine to feed Terraform stack. 
+* bringing the full power of Ansible variables engine to feed Terraform stack.
 
 ### Why use Ansible instead of `$MY_PREFERED_TOOL` ?
 
@@ -24,3 +24,5 @@ For three simple reasons:
 * A usable installation of Ansible
 * A usable installation of Terraform
 * The `make` CLI tool (optional)
+
+[FAQ]
