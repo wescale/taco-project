@@ -1,13 +1,21 @@
 # The T.A.C.O. project
 ### Terraform & Ansible, Combined & Organized
 
-## What you will find here
+## Purpose
 
-* An Ansible toolkit aimed at making a standardized use of Terraform.
-* Terraform code for setting up an opiniated multi-account AWS organizations.
+The T.A.C.O. project is an Ansible toolkit aimed at making a standardized use of Terraform.
 
-## What you will need on your workstation to use it
+Var files management in Terraform does not fit my views on how it should be done.
 
-* A usable installation of Ansible
-* A usable installation of Terraform
-* The `make` CLI tool
+## Prerequisites
+
+Installed on the run host:
+
+* Ansible 2.8.x
+* Terraform 0.12.x
+
+# Links
+
+* Project documentation
+* (Ansible Install Guide)[https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html]
+* (Terraform Install Guide)[https://learn.hashicorp.com/terraform/getting-started/install.html]
