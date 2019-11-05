@@ -25,4 +25,4 @@ For three simple reasons:
 * A usable installation of Terraform
 * The `make` CLI tool (optional)
 
-[FAQ]
+[FAQ](FAQ.md)
