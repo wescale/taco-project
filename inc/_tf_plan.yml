@@ -9,36 +9,12 @@
     var: plan_command_line
     verbosity: 1
 
-- name: in case of no initial_role defined
-  block:
-    - name: "{{ tflayer }} - plan"
-      shell: >-
-        {{ plan_command_line }}
-      args:
-        chdir: "{{ src_layer_dir }}"
-      register: tf_plan_light
-
-    - set_fact:
-        tf_plan: "{{ tf_plan_light }}"
-  when: initial_role is not defined
-
-
-- name: in case of initial_role defined
-  block:
-    - name: "{{ tflayer }} - plan (with initial role assumed)"
-      shell: >-
-        {{ plan_command_line }}
-      args:
-        chdir: "{{ src_layer_dir }}"
-      register: tf_plan_assumed
-      environment:
-        AWS_ACCESS_KEY_ID: "{{ initial_role_credentials.sts_creds.access_key }}"
-        AWS_SECRET_ACCESS_KEY: "{{ initial_role_credentials.sts_creds.secret_key }}"
-        AWS_SECURITY_TOKEN: "{{ initial_role_credentials.sts_creds.session_token }}"
-
-    - set_fact:
-        tf_plan: "{{ tf_plan_assumed }}"
-  when: initial_role is defined
+- name: "{{ tflayer }} - plan"
+  command: >-
+    {{ plan_command_line }}
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_plan
 
 - pause:
     prompt: |-
@@ -57,4 +33,3 @@
   debug:
     msg: "{{ tf_plan.stdout }}"
   when: auto_apply|default(false)
-

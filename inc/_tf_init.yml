@@ -27,9 +27,8 @@
   when: local_state_to_s3|default(false)
 
 - name: "{{ tflayer }} - init"
-  shell: >-
+  command: >-
     {{ init_command_line }}
-
   args:
     chdir: "{{ src_layer_dir }}"
   register: tf_init
@@ -53,4 +52,3 @@
     msg: "{{ tf_state_push.stdout }}"
     verbosity: 2
   when: local_state_to_s3|default(false)
-
