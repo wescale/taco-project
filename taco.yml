@@ -1,40 +1,13 @@
 ---
-- name: Sorting credentials
-  hosts: localhost
-  become: no
-
-  tasks:
-    - block:
-        - name: try to assume a role before starting terraform work
-          sts_assume_role:
-            role_arn: "{{ initial_role }}"
-            role_session_name: "{{ initial_role.split('/')[-1] }}"
-            region: "{{ deploy_region }}"
-          register: initial_assume_role
-
-        - name: role assumed, picking vars to feed terraform env vars
-          set_fact:
-            aws_credentials:
-              access_key: "{{ initial_assume_role.sts_creds.access_key }}"
-              secret_key: "{{ initial_assume_role.sts_creds.secret_key }}"
-              session_token: "{{ initial_assume_role.sts_creds.session_token }}"
-      rescue:
-        - name: fallback on using AWS env vars
-          set_fact:
-            aws_credentials:
-              access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-              secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-              session_token: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
-
 - name: Terrabot wakes up
   hosts: localhost
   become: no
 
   environment:
-    AWS_ACCESS_KEY_ID: "{{ aws_credentials.access_key }}"
-    AWS_SECRET_ACCESS_KEY: "{{ aws_credentials.secret_key }}"
-    AWS_SESSION_TOKEN: "{{ aws_credentials.session_token }}"
-    AWS_SECURITY_TOKEN: "{{ aws_credentials.session_token }}"
+    AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    AWS_SESSION_TOKEN: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
+    AWS_SECURITY_TOKEN: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
     AWS_DEFAULT_REGION: "{{ deploy_region }}"
 
   vars:

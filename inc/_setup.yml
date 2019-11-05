@@ -56,15 +56,6 @@
         |list
       }}
 
-- name: get current_role
-  shell:
-    aws sts get-caller-identity --output text --query UserId | awk -F ':' '{ print $2 }'
-  register: initial_deploy_role_raw
-
-- name: variable cooking
-  set_fact:
-    initial_deploy_role: "{{ initial_deploy_role_raw.stdout }}"
-
 - name: Include every yml var file linked to tflayer
   include_vars: "{{ item }}"
   with_items: "{{ tfvars_addons }}"
