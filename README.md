@@ -17,5 +17,5 @@ Installed on the run host:
 # Links
 
 * Project documentation
-* (Ansible Install Guide)[https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html]
-* (Terraform Install Guide)[https://learn.hashicorp.com/terraform/getting-started/install.html]
+* [Ansible Install Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+* [Terraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install.html)
