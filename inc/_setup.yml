@@ -56,7 +56,7 @@
 - name: Get useful vars list
   block:
     - name: Get useful vars list
-      command: >-
+      shell: >-
         grep variable *.tf
       args:
         chdir: "{{ src_layer_dir }}"
@@ -77,17 +77,9 @@
         claimed_vars: []
 
 - name: Template terraform var file
-  copy:
+  template:
+    src: "{{ playbook_dir }}/inc/taco.tfvars.j2"
     dest: "{{ target_layer_dir }}/taco.tfvars.j2"
-    content:
-      {% set comma = joiner(",") %}
-      {
-      {% for varclaim in claimed_vars %}
-      {% if vars[varclaim] is defined %}
-        {{ comma() }}"{{ varclaim }}": {%raw%}{{{%endraw%} {{varclaim}}|to_nice_json {%raw%}}}{%endraw%}
-      {% endif %}
-      {% endfor %}
-      }
 
 - name: Render terraform var file
   template:
