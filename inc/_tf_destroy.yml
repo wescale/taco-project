@@ -12,24 +12,12 @@
     - not (auto_apply|default(false))
     - prompted is defined and prompted.user_input != 'destroy'
 
-- include_tasks: "{{ item }}"
-  with_first_found:
-    - files:
-        - "{{ layers_dir }}/{{ tflayer }}/taco-teardown.yml"
-      skip: true
-
-- name: Build destroy command-line
-  set_fact:
-    destroy_command_line: >-
-      terraform destroy -force {{ tf_common_options }}
-      2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
-
-- debug:
-    var: destroy_command_line
+- name: Terraform destroy command
+  debug:
+    var: tf_destroy_cmd_debug_msg
     verbosity: 1
 
-- name: "{{ tflayer }} - destroy"
-  shell: >-
-    {{ destroy_command_line }}
+- name: Terraform destroy on {{ tflayer }}
+  shell: "{{ tf_destroy_cmd }}"
   args:
     chdir: "{{ src_layer_dir }}"

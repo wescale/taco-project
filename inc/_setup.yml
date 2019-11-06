@@ -1,5 +1,5 @@
 ---
-- name: check that mandatory vars are supplied
+- name: Check for mandatory vars
   assert:
     that:
       - vars[item] is defined
@@ -11,42 +11,35 @@
     - deploy_region
     - tfaction
 
-- name: variable cooking
-  set_fact:
-    src_layer_dir: "{{ layers_dir }}/{{ tflayer }}"
-    taco_all_layers_dir: "{{ target_dir }}/taco"
-    target_layer_dir: "{{ target_dir }}/taco/{{ tflayer }}"
-
-- name: check that target terraform layer is found
+- name: Search target terraform layer directory
   stat:
     path: "{{ src_layer_dir }}"
   register: src_layer_dir_scan
 
-- name: check that target terraform layer is found
+- name: Assert target terraform layer directory
   assert:
     that:
       - src_layer_dir_scan.stat.exists
       - src_layer_dir_scan.stat.isdir
     msg: "Source layer could not be found: {{ src_layer_dir }}"
 
-- name: create work dir
+- name: Create work directory
   file:
     path: "{{ target_layer_dir }}"
     state: directory
 
-- name: check for taco var files
+- name: Search var files
   stat:
     path: "{{ item }}"
   register: taco_vars_scan
   with_items:
-    - "{{ playbook_dir }}/defaults.taco.yml"
     - "{{ layers_dir }}/all-layers.taco.yml"
     - "{{ layers_dir }}/{{ tflayer }}/all-env.all-region.taco.yml"
     - "{{ layers_dir }}/{{ tflayer }}/all-env.{{ deploy_region }}.taco.yml"
     - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.all-region.taco.yml"
     - "{{ layers_dir }}/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.taco.yml"
 
-- name: cooking variables
+- name: Search var files
   set_fact:
     tfvars_addons: >-
       {{
@@ -56,51 +49,47 @@
         |list
       }}
 
-- name: Include every yml var file linked to tflayer
+- name: Load var files
   include_vars: "{{ item }}"
   with_items: "{{ tfvars_addons }}"
 
-- include_tasks: "{{ item }}"
-  with_first_found:
-    - files:
-        - "{{ layers_dir }}/{{ tflayer }}/taco-setup.yml"
-      skip: true
-#  when: tfaction != "destroy"
-
-- block:
-    - name: get useful var list
-      shell: >-
+- name: Get useful vars list
+  block:
+    - name: Get useful vars list
+      command: >-
         grep variable *.tf
       args:
         chdir: "{{ src_layer_dir }}"
       register: claimed_vars_sh
 
-    - set_fact:
+    - name: Get useful vars list
+      set_fact:
         claimed_vars: >-
           {{
             claimed_vars|default([])
             + [item | regex_replace('^.*?"(.*?)".*$', '\1')]
           }}
       loop: "{{ claimed_vars_sh.stdout_lines }}"
+
   rescue:
-    - set_fact:
+    - name: Layer has no variables
+      set_fact:
         claimed_vars: []
 
-
-- name: Create jinja template of claimed variables
-  template:
-    src: "{{ playbook_dir }}/inc/layer_vars_claim.j2"
+- name: Template terraform var file
+  copy:
     dest: "{{ target_layer_dir }}/taco.tfvars.j2"
+    content:
+      {% set comma = joiner(",") %}
+      {
+      {% for varclaim in claimed_vars %}
+      {% if vars[varclaim] is defined %}
+        {{ comma() }}"{{ varclaim }}": {%raw%}{{{%endraw%} {{varclaim}}|to_nice_json {%raw%}}}{%endraw%}
+      {% endif %}
+      {% endfor %}
+      }
 
-- name: create terraform var file (JSON format)
+- name: Render terraform var file
   template:
     src: "{{ target_layer_dir }}/taco.tfvars.j2"
     dest: "{{ target_layer_dir }}/taco.tfvars.json"
-
-- set_fact:
-    expected_local_tfstate: "{{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
-
-- set_fact:
-    tf_common_options: >-
-      -var-file={{ target_layer_dir }}/taco.tfvars.json
-      -state={{ expected_local_tfstate }}

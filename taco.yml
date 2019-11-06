@@ -32,9 +32,3 @@
       when:
         - remote_stack_url is defined
         - remote_stack_version is defined
-
-    - name: TerraBot has finished.
-      debug:
-        msg:
-          - "SRC_LAYER={{ src_layer_dir }}"
-          - "TARGET_LAYER={{ target_layer_dir }}"

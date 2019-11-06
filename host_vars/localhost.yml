@@ -1,0 +1,45 @@
+---
+auto_apply: false
+dry_run: false
+src_layer_dir: "{{ layers_dir }}/{{ tflayer }}"
+taco_all_layers_dir: "{{ target_dir }}/taco"
+target_layer_dir: "{{ target_dir }}/taco/{{ tflayer }}"
+
+expected_local_tfstate: "{{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
+
+tf_cmd_std_redir_suffix: >-
+  2>&1 > {{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out
+
+tf_cmd_chdir_prefix: "cd {{ src_layer_dir }} &&"
+
+tf_common_options: >-
+  -var-file={{ target_layer_dir }}/taco.tfvars.json
+  -state={{ expected_local_tfstate }}
+
+tf_init_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_init_cmd }}"
+tf_init_cmd: >-
+  terraform init -get=true
+  -upgrade={{ tf_upgrade|default(false)|lower }}
+  {% if tflayer_backend_config is defined %}
+    {% for backend_conf in tflayer_backend_config.items() %}
+    -backend-config="{{ backend_conf[0] }}={{ backend_conf[1] }}"
+    {%- endfor %}
+  {% endif -%}
+  {% if backend_reconfigure %} -reconfigure{% endif %}
+
+
+tf_plan_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_plan_cmd }}"
+tf_plan_cmd: >-
+  terraform plan {{ tf_common_options }}
+
+
+tf_apply_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_apply_cmd }}"
+tf_apply_cmd: >-
+  terraform apply -auto-approve {{ tf_common_options }}
+  {{ tf_cmd_std_redir_suffix }}
+
+
+tf_destroy_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_destroy_cmd }}"
+tf_destroy_cmd: >-
+  terraform destroy -force {{ tf_common_options }}
+  {{ tf_cmd_std_redir_suffix }}

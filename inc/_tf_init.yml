@@ -1,54 +1,11 @@
 ---
-- set_fact:
-    init_command_line: >-
-      terraform init -get=true
-      -upgrade={{ tf_upgrade|default(false)|lower }}
-      {% if tflayer_backend_config is defined %}
-       {% for backend_conf in tflayer_backend_config.items() %}
-       -backend-config="{{ backend_conf[0] }}={{ backend_conf[1] }}"
-       {%- endfor %}
-      {% endif -%}
-      {% if backend_reconfigure %} -reconfigure{% endif %}
-
-- name: "Add -v for this debug message"
+- name: Terraform init command
   debug:
-    msg: >-
-      cd {{ src_layer_dir }} &&
-      {{ init_command_line }}
+    msg: "{{ tf_init_cmd_debug_msg }}"
     verbosity: 1
 
-- name: "Generate backend.tf if local_state_to_s3 is set to true"
-  copy:
-    dest: "{{ src_layer_dir }}/backend.tf"
-    content: |-
-      terraform {
-        backend "s3" {}
-      }
-  when: local_state_to_s3|default(false)
-
-- name: "{{ tflayer }} - init"
-  command: >-
-    {{ init_command_line }}
+- name: Terraform init on {{ tflayer }}
+  command: "{{ tf_init_cmd }}"
   args:
     chdir: "{{ src_layer_dir }}"
   register: tf_init
-
-- debug:
-    msg: >-
-      cd {{ src_layer_dir }} &&
-      terraform state push {{ expected_local_tfstate }}
-    verbosity: 1
-
-- name: "{{ tflayer }} - migrate"
-  shell: >-
-    terraform state push {{ expected_local_tfstate }}
-  args:
-    chdir: "{{ src_layer_dir }}"
-  register: tf_state_push
-  when: local_state_to_s3|default(false)
-
-- name: displaying state push
-  debug:
-    msg: "{{ tf_state_push.stdout }}"
-    verbosity: 2
-  when: local_state_to_s3|default(false)

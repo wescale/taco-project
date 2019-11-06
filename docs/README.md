@@ -11,6 +11,10 @@ This is an Ansible toolkit aimed at:
 * adding before-and-after Ansible capabilities to any Terraform stack.
 * bringing the full power of Ansible variables engine to feed Terraform stack.
 
+* Directory convention
+* Normalized sequence
+* Var files loading precedence
+
 ## Links
 
 [FAQ](FAQ.md)

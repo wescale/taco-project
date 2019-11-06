@@ -1,22 +1,19 @@
 ---
 - include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
 
-- set_fact:
-    plan_command_line: >-
-      terraform plan {{ tf_common_options }}
-
-- debug:
-    var: plan_command_line
+- name: Terraform plan command
+  debug:
+    msg: "{{ tf_plan_cmd_debug_msg }}"
     verbosity: 1
 
-- name: "{{ tflayer }} - plan"
-  command: >-
-    {{ plan_command_line }}
+- name: Terraform plan on {{ tflayer }}
+  command: "{{ tf_plan_cmd }}"
   args:
     chdir: "{{ src_layer_dir }}"
   register: tf_plan
 
-- pause:
+- name: Display plan result and prompt validation
+  pause:
     prompt: |-
       {{ tf_plan.stdout }}
       #
@@ -26,10 +23,10 @@
       Press 'ENTER' to continue
   register: tf_plan_prompt
   when:
-    - not (auto_apply|default(false))
-    - not dry_run|bool
+    - not auto_apply
+    - not dry_run
 
-- name: displaying plan
+- name: Display plan result
   debug:
     msg: "{{ tf_plan.stdout }}"
-  when: auto_apply|default(false)
+  when: auto_apply
