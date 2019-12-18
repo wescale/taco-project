@@ -1,26 +1,9 @@
-# The T.A.C.O. project
-### Terraform & Ansible, Combined & Organized
-
-## Purpose
-
-The T.A.C.O. project is an Ansible toolkit aimed at making a standardized use of Terraform.
-
-Var files management in Terraform does not fit my views on how it should be done.
-
-# Links
-
-* Project documentation
-* [Ansible Install Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-* [Terraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install.html)
-
 # The TACO Project
 #### Terraform & Ansible, Combined & Organized
 
 ## Where am I ?
 
-This is the homepage of the TACO project obviously...
-
-TACO is a thin ansible wrapper for Terraform that provides extra features for keeping your Terraform configurations DRY and managing remote state.
+This is the homepage of the TACO project obviously... TACO is a thin ansible wrapper for Terraform that provides extra features and conventions for keeping your Terraform configurations DRY.
 
 ## Features
 
@@ -32,7 +15,7 @@ TACO brings you key features to gain time in your every day work around Terrafor
 ## Prerequisites
 
 * [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) (tested with Ansible 2.9.x)
-* [Install Terraform](https://www.terraform.io/downloads.html) (tested on 0.12.x)
+* [Install Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (tested on 0.12.x)
 * Have a `terraform` directory, in which you will group several directories containing Terraform code.
 These sub-directories `terraform/*` will be our *layers* directories.
 
@@ -117,7 +100,6 @@ terraform init [...]
 
 
 ## Frequently Asked Questions
-
 ### Why use Ansible instead of `$MY_PREFERED_TOOL` ?
 
 For three simple reasons:
