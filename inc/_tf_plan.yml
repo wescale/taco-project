@@ -23,10 +23,10 @@
       Press 'ENTER' to continue
   register: tf_plan_prompt
   when:
-    - not auto_apply
-    - not dry_run
+    - not (auto_apply|bool)
+    - not (dry_run|bool)
 
 - name: Display plan result
   debug:
     msg: "{{ tf_plan.stdout }}"
-  when: auto_apply
+  when: auto_apply|bool
