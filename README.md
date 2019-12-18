@@ -7,15 +7,121 @@ The T.A.C.O. project is an Ansible toolkit aimed at making a standardized use of
 
 Var files management in Terraform does not fit my views on how it should be done.
 
-## Prerequisites
-
-Installed on the run host:
-
-* Ansible 2.8.x
-* Terraform 0.12.x
-
 # Links
 
 * Project documentation
 * [Ansible Install Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 * [Terraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install.html)
+
+# The TACO Project
+#### Terraform & Ansible, Combined & Organized
+
+## Where am I ?
+
+This is the homepage of the TACO project obviously...
+
+TACO is a thin ansible wrapper for Terraform that provides extra features for keeping your Terraform configurations DRY and managing remote state.
+
+## Features
+
+TACO brings you key features to gain time in your every day work around Terraform:
+* a smart way of managing variables in a DRY way
+* an awesome way of managing dynamic backend configurations
+* the fantabulous capacity of deploying remote Terraform stack from their git repository url
+
+## Prerequisites
+
+* [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) (tested with Ansible 2.9.x)
+* [Install Terraform](https://www.terraform.io/downloads.html) (tested on 0.12.x)
+* Have a `terraform` directory, in which you will group several directories containing Terraform code.
+These sub-directories `terraform/*` will be our *layers* directories.
+
+## Installation
+
+* Get the project code, either by:
+  * [Downloading it](https://github.com/WeScale/taco-project/releases)
+  * or `git clone` the project
+* Export a `TACO_HOME` environment variable to point to the root of the TACO project on your machine
+
+## Usage
+
+Run `ansible-playbook ${TACO_HOME}/taco.yml` from the root of a compliant Terraform project.
+  * You will have to supply 4 variables to the ansible run :
+    * `tflayer`: the name of the Terraform layer you want to target. Can be any subdirectory of the `terraform/` directory
+    * `deploy_env`: a label that should be used to differenciate you several tfstates
+    * `deploy_region`: the region you intend to apply your Terraform layer.
+    * `tfaction`: the desired Terraform workflow phase you want. Can be one of `[ init | plan | apply | destroy ]`
+
+## Smartly managing variables
+
+The main feature of TACO is to deport variables in YAML files and rely on Ansible variable and templating
+feature instead of passing `tfvars` files by hand to Terraform.
+
+If multiple variables of the same name are defined in different places, they get overwritten in a certain order. In the list below, the `{{ tflayer }}`, `{{ deploy_env }}` and `{{ deploy_region }}` placeholders refers to the value passed to the `taco.yml` playbook. Here is the order of precedence from least to greatest (the last listed variables winning prioritization):
+
+* `terraform/all-layers.taco.yml`
+* `terraform/{{ tflayer }}/all-env.all-region.taco.yml`
+* `terraform/{{ tflayer }}/all-env.{{ deploy_region }}.taco.yml`
+* `terraform/{{ tflayer }}/{{ deploy_env }}.all-region.taco.yml`
+* `terraform/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.taco.yml`
+
+Avoid defining the variable `x` in many places and then ask the question "which x gets used". There is only one Empire State Building. One Mona Lisa, etc. Figure out where to define a variable, and don’t make it complicated.
+
+When running Terraform CLI, TACO will:
+
+* read all these files and gather every variable defined there
+* scan Terraform code and find every `variable "xxx"` definition
+* generate a JSON file with every values needed by the Terraform code
+* pass it to the Terraform CLI via a `-var-file=...` option
+
+## Awesomely managing dynamic backend configuration
+
+Among the several ways of defining Terraform backend configuration, we chose to pass them via CLI options
+supplied to `terraform init -backend-config=...`.
+
+It is based on the presence of a special variable named `tflayer_backend_config` in the YAML variables files. It should be a map and every key-value in it will become option for the init phase.
+
+For example, if you have this in your YAML variable files:
+```
+tflayer_backend_config:
+  bucket: "project-tfstates"
+  region: "eu-west-1"
+  encrypt: "true"
+  kms_key_id: "arn:aws:kms:eu-west-1:000666000666:key/0dd666ee-25aa-a2a2-8888-042042042fff"
+  key: "tflayers/{{ tflayer }}/{{ deploy_env }}.{{ deploy_region }}.tfstate"
+  dynamodb_table: "project-tfstates-lock"
+```
+
+And you run this from the root of your Terraform project:
+```
+ansible-playbook ${TACO_HOME}/taco.yml \
+  -e tflayer=network                   \
+  -e tfaction=init                     \
+  -e deploy_env=dev                    \
+  -e deploy_region=eu-west-3
+```
+
+Then this will add init option like:
+```
+terraform init [...]
+-backend-config="bucket=project-tfstates"
+-backend-config="region=eu-west-1"
+-backend-config="encrypt=true"
+-backend-config="kms_key_id=arn:aws:kms:eu-west-1:000666000666:key/0dd666ee-25aa-a2a2-8888-042042042fff"
+-backend-config="key=tflayers/network/dev.eu-west-3.tfstate"
+-backend-config="dynamodb_table=project-tfstates-lock"
+```
+
+## Fantabulously deploying remote Terraform project
+
+
+
+## Frequently Asked Questions
+
+### Why use Ansible instead of `$MY_PREFERED_TOOL` ?
+
+For three simple reasons:
+
+* Ansible makes it easy to open and hack the project if you want/need to.
+* Ansible is great at mixing variables files and templating.
+* On the project founder's workstation: `[ "$MY_PREFERED_TOOL" = "ansible" ]` returns `0`
