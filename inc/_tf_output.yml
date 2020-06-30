@@ -1,0 +1,17 @@
+---
+- name: Terraform output command
+  debug:
+    msg: "{{ tf_output_cmd_debug_msg }}"
+    verbosity: 1
+
+- name: Terraform output on {{ tflayer }}
+  command: "{{ tf_output_cmd }}"
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_output
+  when: not dry_run
+
+- name: Show output on {{ tflayer }}
+  debug: 
+    msg: "{{ tf_output.stdout }}"
+  when: not dry_run

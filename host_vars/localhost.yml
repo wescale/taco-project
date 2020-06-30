@@ -59,3 +59,12 @@ tf_import_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_import_cmd }}"
 tf_import_cmd: >-
   terraform import {{ tf_addr }} {{ tf_id }}
   {{ tf_cmd_std_redir_suffix }}
+
+
+tf_output_options: >-
+  {% if tf_name is defined %}{{ tf_name }} {% endif -%}
+  {% if tf_output_file is defined %}2>&1 > {{ target_layer_dir }}/{{ tf_output_file }}{% endif -%}
+
+tf_output_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_output_cmd }}"
+tf_output_cmd: >-
+  terraform output {{ tf_output_options }}
