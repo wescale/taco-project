@@ -32,3 +32,4 @@
 - name: Show output on {{ tflayer }}
   debug:
     msg: "{{ lookup('file', '{{ target_layer_dir }}/{{ deploy_env }}.{{ deploy_region }}.live.out') }}"
+  when: not (dry_run|bool)
