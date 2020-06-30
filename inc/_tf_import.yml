@@ -1,0 +1,29 @@
+---
+- name: Check for mandatory tf_addr var
+  assert:
+    that:
+      - tf_addr is defined
+      - tf_addr | length > 0
+    msg: "Mandatory variable 'tf_addr' missing - tf_addr specify the address to import the ressource to"
+
+- name: Check for mandatory tf_id var
+  assert:
+    that:
+      - tf_id is defined
+      - tf_id | length > 0
+    msg: "Mandatory variable 'tf_id' missing - tf_id specify the resource-specific ID to identify that resource being imported"
+
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
+- name: Terraform import command
+  debug:
+    msg: "{{ tf_import_cmd_debug_msg }}"
+    verbosity: 1
+
+
+- name: Terraform import on {{ tflayer }}
+  command: "{{ tf_import_cmd }}"
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_import
+

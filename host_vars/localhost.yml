@@ -53,3 +53,9 @@ tf_destroy_cmd: >-
 tf_refresh_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_refresh_cmd }}"
 tf_refresh_cmd: >-
   terraform refresh {{ tf_common_options }}
+
+
+tf_import_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_import_cmd }}"
+tf_import_cmd: >-
+  terraform import {{ tf_addr }} {{ tf_id }}
+  {{ tf_cmd_std_redir_suffix }}
