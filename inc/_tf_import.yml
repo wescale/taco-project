@@ -4,7 +4,7 @@
     that:
       - tf_addr is defined
       - tf_addr | length > 0
-    msg: "Mandatory variable 'tf_addr' missing - tf_addr specify the address to import the ressource to"
+    msg: "Mandatory variable 'tf_addr' missing - tf_addr specify the address to import the resource to"
 
 - name: Check for mandatory tf_id var
   assert:
