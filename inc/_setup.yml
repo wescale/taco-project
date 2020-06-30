@@ -3,7 +3,7 @@
   assert:
     that:
       - vars[item] is defined
-      - vars[item] != ''
+      - vars[item] | length > 0
     msg: "Mandatory variable '{{ item }}' missing"
   with_items:
     - tflayer

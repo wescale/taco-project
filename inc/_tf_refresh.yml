@@ -1,0 +1,16 @@
+---
+- name: Terraform refresh command
+  debug:
+    msg: "{{ tf_refresh_cmd_debug_msg }}"
+    verbosity: 1
+
+- name: Terraform refresh on {{ tflayer }}
+  command: "{{ tf_refresh_cmd }}"
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_output
+  when: not dry_run
+
+- name: Show refresh on {{ tflayer }}
+  debug: 
+    msg: "{{ tf_output.stdout }}"
