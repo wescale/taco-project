@@ -39,6 +39,11 @@ tf_apply_cmd: >-
   {{ tf_cmd_std_redir_suffix }}
 
 
+tf_plan_destroy_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_plan_destroy_cmd }}"
+tf_plan_destroy_cmd: >-
+  terraform plan -destroy {{ tf_common_options }}
+
+
 tf_destroy_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_destroy_cmd }}"
 tf_destroy_cmd: >-
   terraform destroy -force {{ tf_common_options }}

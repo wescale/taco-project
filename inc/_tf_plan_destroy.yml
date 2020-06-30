@@ -1,0 +1,32 @@
+---
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
+- name: Terraform plan destroy command
+  debug:
+    msg: "{{ tf_plan_destroy_cmd_debug_msg }}"
+    verbosity: 1
+
+- name: Terraform plan destroy on {{ tflayer }}
+  command: "{{ tf_plan_destroy_cmd }}"
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_plan_destroy
+
+- name: Display destroy plan result and prompt validation
+  pause:
+    prompt: |
+      {{ tf_plan_destroy.stdout }}
+      #
+      ##
+      ###
+      #### READ CAREFULLY !!!
+      Press 'ENTER' to continue
+  register: tf_plan_destroy_prompt
+  when:
+    - not auto_apply
+    - not dry_run
+
+- name: Display destroy plan result
+  debug:
+    msg: "{{ tf_plan_destroy.stdout }}"
+  when: auto_apply
