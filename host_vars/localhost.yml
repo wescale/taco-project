@@ -48,3 +48,8 @@ tf_destroy_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_destroy_cmd }}"
 tf_destroy_cmd: >-
   terraform destroy -force {{ tf_common_options }}
   {{ tf_cmd_std_redir_suffix }}
+
+
+tf_refresh_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_refresh_cmd }}"
+tf_refresh_cmd: >-
+  terraform refresh {{ tf_common_options }}
