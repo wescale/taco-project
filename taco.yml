@@ -18,7 +18,7 @@
         - remote_stack_url is defined
         - remote_stack_version is defined
 
-     - import_tasks: "{{ playbook_dir }}/inc/_setup.yml"
+    - import_tasks: "{{ playbook_dir }}/inc/_setup.yml"
 
   tasks:
     - import_tasks: "{{ playbook_dir }}/inc/_tf_{{ tfaction }}.yml"
