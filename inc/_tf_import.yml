@@ -26,4 +26,9 @@
   args:
     chdir: "{{ src_layer_dir }}"
   register: tf_import
+  when: not dry_run
 
+- name: Show import result on {{ tflayer }}
+  debug:
+    msg: "{{ tf_import.stdout }}"
+  when: not dry_run
