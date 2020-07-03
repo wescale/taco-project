@@ -63,8 +63,7 @@ tf_import_cmd: >-
 
 tf_state_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_state_cmd }}"
 tf_state_cmd: >-
-  terraform state {{ tf_state_action }} {{ tf_addr }}
-
+  terraform state {{ tf_state_action }}
 
 tf_output_options: >-
   {% if tf_name is defined %}{{ tf_name }} {% endif -%}
