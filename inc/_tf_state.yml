@@ -8,6 +8,14 @@
 
 - include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
 
+- name: Check for mandatory tf_addr var
+  assert:
+    that:
+      - tf_addr is defined
+    msg: "Semi-mandatory (can be passed as an empty string) variable 'tf_addr' is missing - tf_addr specify the state action wanted"
+
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
 - name: Terraform state command
   debug:
     msg: "{{ tf_state_cmd_debug_msg }}"
