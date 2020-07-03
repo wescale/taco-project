@@ -33,12 +33,16 @@ Run `ansible-playbook ${TACO_HOME}/taco.yml` from the root of a compliant Terraf
     * `tflayer`        : the name of the Terraform layer you want to target. Can be any subdirectory of the `terraform/` directory
     * `deploy_env`     : a label that should be used to differenciate you several tfstates
     * `deploy_region`  : the region you intend to apply your Terraform layer.
-    * `tfaction`       : the desired Terraform workflow phase you want. Can be one of `[ init | plan | apply | refresh | import | output | destroy ]`  
+    * `tfaction`       : the desired Terraform workflow phase you want. Can be one of `[ init | plan | apply | refresh | import | state | output | destroy ]`  
 * For some Terraform workflow phases, you will need to supply additionally variables to the ansible run
     * Mandatory variables when running `import` terraform workflow phase :
         * `tf_addr` : specify the address to import the resource to
         * `tf_id`   : specify the resource-specific ID to identify that resource being imported
-    * Optional variables when running `output` terraform workflow phase :
+    * Mandatory variables when running `state` terraform workflow phase :
+        * `tf_state_action` : specify the state action wanted (e.g. rm, pull, show...)
+    * Optional variables when running `state` terraform workflow phase :
+        * `tf_addr` : specify the address targeted by the state change (.e.g. when doing a `terraform state rm`, you need to give the target resource adress)
+     * Optional variables when running `output` terraform workflow phase :
         * `tf_name`        : specify the name of the resource to output
         * `tf_output_file` : specify the name of the output file where the `output` result command will be redirect (file will be available on taco layer target directory)
          
