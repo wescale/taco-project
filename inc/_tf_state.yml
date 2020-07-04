@@ -1,0 +1,29 @@
+---
+- name: Check for mandatory tf_state_action var
+  assert:
+    that:
+      - tf_state_action is defined
+      - tf_state_action | length > 0
+    msg: "Mandatory variable 'tf_state_action' missing - tf_state_action specify the state action wanted"
+
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
+- name: Check for mandatory tf_addr var
+  assert:
+    that:
+      - tf_addr is defined
+    msg: "Semi-mandatory (can be passed as an empty string) variable 'tf_addr' is missing - tf_addr specify the state action wanted"
+
+- include_tasks: "{{ playbook_dir }}/inc/_tf_init.yml"
+
+- name: Terraform state command
+  debug:
+    msg: "{{ tf_state_cmd_debug_msg }}"
+    verbosity: 1
+
+
+- name: Terraform state on {{ tflayer }}
+  command: "{{ tf_state_cmd }}"
+  args:
+    chdir: "{{ src_layer_dir }}"
+  register: tf_state

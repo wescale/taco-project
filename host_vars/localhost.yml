@@ -60,6 +60,10 @@ tf_import_cmd: >-
   terraform import -var-file={{ target_layer_dir }}/taco.tfvars.json {{ tf_addr }} {{ tf_id }}
 
 
+tf_state_cmd_debug_msg: "{{ tf_cmd_chdir_prefix }} {{ tf_state_cmd }}"
+tf_state_cmd: >-
+  terraform state {{ tf_state_action }}
+
 tf_output_options: >-
   {% if tf_name is defined %}{{ tf_name }} {% endif -%}
   {% if tf_output_file is defined %}2>&1 > {{ target_layer_dir }}/{{ tf_output_file }}{% endif -%}
